@@ -1,0 +1,8 @@
+key.php
+test.db
+test.php
+admin/sample_data/
+admin/.htaccess
+admin/.htpasswd
+.DS_Store
+.vs_code/

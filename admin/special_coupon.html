@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- For old IEs -->
+    <link rel="shortcut icon" href="../favicons/favicon.ico" />
+
+    <!-- For new browsers - multisize ico  -->
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="../favicons/favicon.ico">
+
+    <!-- For iPad with high-resolution Retina display running iOS ≥ 7: -->
+    <link rel="apple-touch-icon" sizes="152x152" href="../favicons/favicon-152-precomposed.png">
+
+    <!-- For iPad with high-resolution Retina display running iOS ≤ 6: -->
+    <link rel="apple-touch-icon" sizes="144x144" href="../favicons/favicon-144-precomposed.png">
+
+    <!-- For iPhone with high-resolution Retina display running iOS ≥ 7: -->
+    <link rel="apple-touch-icon" sizes="120x120" href="../favicons/favicon-120-precomposed.png">
+
+    <!-- For iPhone with high-resolution Retina display running iOS ≤ 6: -->
+    <link rel="apple-touch-icon" sizes="114x114" href="../favicons/favicon-114-precomposed.png">
+
+    <!-- For iPhone 6+ -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../favicons/favicon-180-precomposed.png">
+
+    <!-- For first- and second-generation iPad: -->
+    <link rel="apple-touch-icon" sizes="72x72" href="../favicons/favicon-72-precomposed.png">
+
+    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+    <link rel="apple-touch-icon" sizes="57x57" href="../favicons/favicon-57.png">
+
+    <!-- For Old Chrome -->
+    <link rel="icon" sizes="32x32" href="../favicons/favicon-32.png">
+
+    <!-- For IE10 Metro -->
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="msapplication-TileImage" content="../favicons/favicon-144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Chrome for Android -->
+    <link rel="manifest" href="../favicons/manifest.json">
+    <link rel="icon" sizes="192x192" href="../favicons/favicon-192.png">
+
+
+    <script src="../js/jsQR.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <title>atdbl.coupon</title>
+    <style>
+        :root {
+            $enable-cssgrid: true;
+
+        }
+
+        #input_attendance_code {
+            font-family: Monaco;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-sm">
+
+        <nav class="navbar navbar-light bg-light">
+            <div class="container-fluid">
+
+                <a class="navbar-brand">
+                    <img src="../favicons/favicon-72.png" width="24">
+                    Attendable <span class="small text-muted"> - Special Coupon</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="mt-4 alert alert-danger" id="alert" role="alert">
+            <span class="small">対面時は学生がこの画面をカメラ撮影し、オンライン時は取得した出席コードをTAが当該学生に送信すること</span>
+        </div>
+
+
+
+        <div class="row align-items-start mt-3">
+            <div class="col-12">
+                <div class="input-group mb-2 mt-0">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" value=""
+                            aria-label="Checkbox for following text input" id="checkbox_date"> 日付指定
+                    </div>
+                    <input type="date" class="form-control" id="date">
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="id" placeholder="name@example.com" autocomplete="off"
+                        oninput="checkChar(this);">
+                    <label for=" floatingInput">学修番号</label>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="d-grid">
+                    <button type="button" class="btn btn-danger" id="button_toggle_camera"
+                        onclick="getAttendanceCode();">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="currentColor"
+                            class="bi bi-key" viewBox="0 0 16 16">
+                            <path
+                                d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z" />
+                            <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-secondary" id="alert" role="alert">
+                    <strong>取得した出席コード: </strong>
+                    <div class="form-floating mb-3">
+                        <textarea readonly class="form-control" id="input_attendance_code" style="height: 100px"
+                            placeholder="----">
+                            </textarea>
+                        <label id="label" class="small" for="input_attendance_code">ここにあなたの出席コードが表示されます</label>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // https://support.createwebflow.jp/manual/files/v5/reverse/reverse/workflow_design/form/form_half-character-only.html
+            function checkChar(elm) {
+                var txt = elm.value;
+                for (i = 0; i < txt.length; i++) {
+                    if (escape(txt.charAt(i)).length >= 4) {
+                        alert("半角英数字のみ");
+                        elm.value = "";
+                        break;
+                    }
+                }
+            }
+            function getAttendanceCode() {
+                if (document.querySelector('#id').value == '') {
+                    alert("学修番号を入力してください");
+                    return;
+                }
+
+                let date = new Date(document.querySelector('#date').value);
+                // 特別に生の学修番号からその時の出席コード作成を依頼
+                if (document.querySelector('#checkbox_date').checked == true) {
+                    param = {
+                        type: 'b83hgAnzjhdg1',
+                        id: document.querySelector('#id').value,
+                        date: Math.floor(date.getTime() / 1000)
+                    };
+                }
+                else {
+                    param = {
+                        type: 'b83hgAnzjhdg1',
+                        id: document.querySelector('#id').value,
+                        date: 'no'
+                    };
+                }
+
+
+
+                fetch('../EncodeDecode.php', { // 第1引数に送り先
+                    method: 'POST', // メソッド指定
+                    headers: { 'Content-Type': 'application/json' }, // jsonを指定
+                    body: JSON.stringify(param) // json形式に変換して添付
+                })
+                    .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
+                    .then(res => {
+                        console.log(res); // 返ってきたデータ
+
+                        if (res.message == "Success") {
+                            document.querySelector('#input_attendance_code').value = res.encoded_text;
+                            let timestamp = new Date(res.timestamp * 1000)
+                            document.querySelector('#label').innerHTML = timestamp;
+                        }
+                        else {
+
+                        }
+
+                    });
+            }
+        </script>
+
+        <hr>
+        <footer class="small text-muted text-center">
+            2022 &copy; <a class="link-secondary" href="https://tetsuakibaba.jp" target="_blank">Tetsuaki BABA</a>
+        </footer>
+    </div>
+
+
+    <script src="../js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

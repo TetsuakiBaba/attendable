@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- For old IEs -->
+    <link rel="shortcut icon" href="./favicons/favicon.ico" />
+
+    <!-- For new browsers - multisize ico  -->
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="./favicons/favicon.ico">
+
+    <!-- For iPad with high-resolution Retina display running iOS ≥ 7: -->
+    <link rel="apple-touch-icon" sizes="152x152" href="./favicons/favicon-152-precomposed.png">
+
+    <!-- For iPad with high-resolution Retina display running iOS ≤ 6: -->
+    <link rel="apple-touch-icon" sizes="144x144" href="./favicons/favicon-144-precomposed.png">
+
+    <!-- For iPhone with high-resolution Retina display running iOS ≥ 7: -->
+    <link rel="apple-touch-icon" sizes="120x120" href="./favicons/favicon-120-precomposed.png">
+
+    <!-- For iPhone with high-resolution Retina display running iOS ≤ 6: -->
+    <link rel="apple-touch-icon" sizes="114x114" href="./favicons/favicon-114-precomposed.png">
+
+    <!-- For iPhone 6+ -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicons/favicon-180-precomposed.png">
+
+    <!-- For first- and second-generation iPad: -->
+    <link rel="apple-touch-icon" sizes="72x72" href="./favicons/favicon-72-precomposed.png">
+
+    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+    <link rel="apple-touch-icon" sizes="57x57" href="./favicons/favicon-57.png">
+
+    <!-- For Old Chrome -->
+    <link rel="icon" sizes="32x32" href="./favicons/favicon-32.png">
+
+    <!-- For IE10 Metro -->
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="msapplication-TileImage" content="./favicons/favicon-144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Chrome for Android -->
+    <link rel="manifest" href="./favicons/manifest.json">
+    <link rel="icon" sizes="192x192" href="./favicons/favicon-192.png">
+
+
+    <script src="./js/jsQR.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <title>attendable</title>
+    <style>
+        :root {
+            $enable-cssgrid: true
+        }
+
+        #input_attendance_code,
+        #attendance_code,
+        #id,
+        #code_font_sample {
+            font-family: "Menlo", "Monaco", "Consolas", monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-sm">
+
+        <nav class="navbar navbar-light bg-light">
+            <div class="container-fluid">
+
+                <a class="navbar-brand">
+                    <img src="./favicons/favicon-72.png" width="24" class="me-2">
+                    Attendable 2023</a>
+            </div>
+        </nav>
+
+        <nav>
+            <div class="nav nav-tabs mt-4" id="nav-tab" role="tablist">
+                <button class="nav-link link-secondary active" id="nav-capture-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-capture" type="button" role="tab" aria-controls="nav-capture"
+                    aria-selected="true">capture</button>
+                <button class="nav-link link-secondary" id="nav-checker-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-checker" type="button" role="tab" aria-controls="nav-checker"
+                    aria-selected="false">checker</button>
+                <button class="nav-link link-secondary" id="nav-instruction-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-instruction" type="button" role="tab" aria-controls="nav-instruction"
+                    aria-selected="false">説明</button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-capture" role="tabpanel" aria-labelledby="nav-capture-tab">
+                <div class="row align-items-start mt-4">
+                    <div class="col-9">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="id" placeholder="name@example.com"
+                                autocomplete="off" oninput="checkChar(this);"
+                                onchange="saveIDtoLocalStorage(this.value);">
+                            <label for="floatingInput">学修番号</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="d-grid">
+                            <button type=" button" class="btn btn-secondary" id="button_toggle_camera"
+                                onclick="toggleCamera();">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="currentColor"
+                                    class="bi bi-qr-code-scan" viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0v-3Zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5ZM.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5Zm15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5ZM4 4h1v1H4V4Z" />
+                                    <path d="M7 2H2v5h5V2ZM3 3h3v3H3V3Zm2 8H4v1h1v-1Z" />
+                                    <path d="M7 9H2v5h5V9Zm-4 1h3v3H3v-3Zm8-6h1v1h-1V4Z" />
+                                    <path
+                                        d="M9 2h5v5H9V2Zm1 1v3h3V3h-3ZM8 8v2h1v1H8v1h2v-2h1v2h1v-1h2v-1h-3V8H8Zm2 2H9V9h1v1Zm4 2h-1v1h-2v1h3v-2Zm-4 2v-1H8v1h2Z" />
+                                    <path d="M12 9h2V8h-2v1Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-secondary" id="alert" role="alert">
+                            <strong>取得した出席コード: </strong>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="" id="input_attendance_code"
+                                    aria-label="Recipient's username" aria-describedby="button-addon2" readonly>
+                                <button class="btn btn-outline-secondary" type="button" id="button_copy_attendance_code"
+                                    onclick="copyAttendanceCode();">COPY</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <canvas style="width:100%;margin:0;padding:0" id="canvas" hidden></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- checker 出席コード確認-->
+            <div class="tab-pane fade" id="nav-checker" role="tabpanel" aria-labelledby="nav-checker-tab">
+                <div class="row align-items-start mt-4">
+                    <div class="col-9">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="attendance_code" placeholder="name@example.com"
+                                autocomplete="off">
+                            <label for=" floatingInput">出席コード</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-secondary" id="button_toggle_camera"
+                                onclick="encodeMyCode();">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="currentColor"
+                                    class="bi bi-check" viewBox="0 0 16 16">
+                                    <path
+                                        d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-secondary" role="alert">
+                    <div class="row">
+                        <div class="col-12">
+                            <strong>出席日: </strong><span id="timestamp"></span><br>
+                            <strong>学修番号：</strong><span id="encoded_id"></span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-secondary" id="button_add_attendance_code"
+                                onclick="addAttendanceCode(this);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path
+                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                </svg>
+                                Add
+                            </button>
+                        </div>
+                        <div class="col-12">
+                            <textarea class="form-control" style="font-size:0.6rem" rows="15"
+                                id="textarea_attendance_codes" onchange="saveCodesToLocalStorage();"></textarea>
+                        </div>
+                        <div class="d-grid gap-2 d-flex justify-content-end">
+
+                            <button class="btn btn-secondary" type="button" onclick="downloadTxt();">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-download" viewBox="0 0 16 16">
+                                    <path
+                                        d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                    <path
+                                        d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+
+                                </svg>
+                                Download
+                            </button>
+
+                            <button class="btn btn-secondary" type="button" onclick="shareTxt();">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-share-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z" />
+                                </svg>
+                                Share
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+                <hr>
+
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingSubmit">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseSubmit" aria-expanded="false" aria-controls="collapseSubmit">
+                                提出用出席データを作成する
+                            </button>
+                        </h2>
+                        <div id="collapseSubmit" class="accordion-collapse collapse" aria-labelledby="headingSubmit"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body" id="attendance_codes">
+                                <p>
+                                    これまでの出席コードをすべて以下の欄に入力してください。入力すると即時に出席コードが有効かどうかが判定されます。判定された内容で問題なければダウンロードボタンを押してCSVファイルをダウンロードし、kibacoに提出してください。取得した出席コードの順番は関係ありません。
+                                </p>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control is-invalid" id="checker_student_id"
+                                        placeholder="0123456789" oninput="checkChar(this)"
+                                        onchange="activateCodeInputs(this);">
+                                    <label for="checker_student_id">学修番号を入力</label>
+                                </div>
+                                <!-- ここから出席コード入力欄自動生成コード-->
+                                <script>
+                                    function activateCodeInputs(dom) {
+                                        let inputs = document.querySelectorAll(`[id*="floatingInput"]`);
+                                        if (dom.value != '') {
+                                            for (input of inputs) {
+                                                input.disabled = false;
+                                            }
+                                            dom.classList.replace('is-invalid', 'is-valid');
+                                        }
+                                        else {
+                                            for (input of inputs) {
+                                                input.disabled = true;
+                                            }
+                                            dom.classList.replace('is-valid', 'is-invalid');
+                                        }
+                                    }
+                                    for (let i = 0; i < 14; i++) {
+                                        let div = document.createElement('div');
+                                        div.classList = "form-floating mb-3";
+                                        let label = document.createElement('label');
+                                        label.setAttribute('for', `floatingInput${i + 1}`);
+                                        label.innerHTML = `[${i + 1}] 出席コード`;
+                                        let span = document.createElement('span');
+                                        label.append(span);
+
+                                        let element_input = document.createElement('input');
+                                        element_input.id = `floatingInput${i + 1}`;
+                                        element_input.type = 'text';
+                                        element_input.classList = "form-control is-invalid";
+                                        element_input.disabled = true;
+                                        div.append(element_input);
+                                        div.append(label);
+
+                                        document.querySelector('#attendance_codes').append(div);
+
+                                        element_input.addEventListener('change', function () {
+                                            const param = {
+                                                type: 'check',
+                                                encoded_text: this.value
+                                            };
+
+                                            fetch('EncodeDecode.php', { // 第1引数に送り先
+                                                method: 'POST', // メソッド指定
+                                                headers: { 'Content-Type': 'application/json' }, // jsonを指定
+                                                body: JSON.stringify(param) // json形式に変換して添付
+                                            })
+                                                .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
+                                                .then(res => {
+                                                    console.log(res); // 返ってきたデータ
+                                                    console.log(label);
+
+                                                    if (res.message == "Success") {
+                                                        var results = res.decoded_text.split(',');
+                                                        if (results[1] == document.querySelector("#checker_student_id").value) {
+                                                            let timestamp = new Date(results[0] * 1000).toLocaleString({ timeZone: 'Asia/Tokyo' });
+                                                            this.classList = "form-control is-valid";
+                                                            span.innerHTML = `: ${timestamp}`;
+                                                        }
+                                                        else {
+                                                            this.classList = "form-control is-invalid";
+                                                            span.innerHTML = `: 入力した学修番号と異なります`;
+                                                        }
+                                                    }
+                                                    else {
+                                                        this.classList = "form-control is-invalid";
+                                                        span.innerHTML = `: ${res.message}`;
+                                                    }
+
+                                                });
+                                        });
+                                        //console.log(div);
+                                    }
+
+                                </script>
+
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button class="btn btn-secondary" type="button"
+                                        onclick="downloadCSV();">ダウンロード</button>
+                                    <script>
+                                        function downloadCSV() {
+                                            // まずはデータを確認して、授業コードの使い回しが無いかの確認
+                                            var number_of_input_elements = 14;
+                                            let inputs = [];
+                                            for (let i = 0; i < number_of_input_elements; i++) {
+                                                let input = document.querySelector(`#floatingInput${i + 1}`).value;
+                                                if (input != '') {
+                                                    inputs.push(input);
+                                                }
+                                            }
+                                            const csvs = Array.from(new Set(inputs));
+                                            console.log('inputs', csvs);
+
+                                            // REF: https://noauto-nolife.com/post/javascript-download-csv/
+                                            let csv_string = "";
+                                            for (csv of csvs) {
+                                                csv_string += csv + '\n';
+                                            }
+                                            //ファイル名の指定
+                                            let file_name = "my_attendance_codes.csv";
+
+                                            //CSVのバイナリデータを作る
+                                            let blob = new Blob([csv_string], { type: "text/csv" });
+                                            let uri = URL.createObjectURL(blob);
+
+                                            //リンクタグを作る
+                                            let link = document.createElement("a");
+                                            link.download = file_name;
+                                            link.href = uri;
+
+                                            //作ったリンクタグをクリックさせる
+                                            document.body.appendChild(link);
+                                            link.click();
+
+                                            //クリックしたら即リンクタグを消す
+                                            document.body.removeChild(link);
+                                            delete link;
+                                            console.log(csv_string);
+                                        }
+                                    </script>
+                                </div>
+
+                                <!--ここまで出席コード入力欄自動生成コード-->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="tab-pane fade" id="nav-instruction" role="tabpanel" aria-labelledby="nav-instruction-tab">
+                <div class="mt-4 alert alert-danger" role="alert">
+                    重要なことが書かれていますので、本アプリケーションの利用に先立って必ず一度は目を通してください。
+                </div>
+
+                <h3 class="mt-4">最初にしておくこと</h3>
+
+                <dl class="row mt-3">
+                    <dt class="col-sm-3">ホーム画面への追加</dt>
+                    <dd class="col-sm-9">
+                        <p>
+                            最初にこのウェブページへのショートカットを自身のスマートフォン端末内に作成します。授業内での出席コード取得時に単タップで即座にこのページが開けるようにするための準備です。こちらのページ（<a
+                                class="link-dark" href="https://notepm.jp/help/mobile-shortcut"
+                                target="_blank">スマホのホーム画面にアイコン追加登録する方法（iPhone/Android)</a>）を参照して、このページをホーム画面に追加してください。
+                        </p>
+                    </dd>
+                </dl>
+                <hr>
+                <h3 class="mt-4">使い方</h3>
+                <dl class="row mt-3">
+                    <dt class="col-sm-3">1. 出席コードを取得する</dt>
+                    <dd class="col-sm-9">
+                        <p>captureタブに移動します。最初に学修番号を入力してください。入力された学修番号は自動で端末に保存されるので初回以降は入力は不要です。次にQRコードボタンを押すとスマートフォンカメラが起動します。起動したカメラで教員が提示するQRコードを撮影します。QRコードが認識できるとカメラが自動で閉じ、取得した出席コード欄に取得されたコードが入力されます。
+                        </p>
+                    </dd>
+
+                    <dt class="col-sm-3">2. 出席コードを確認する</dt>
+                    <dd class="col-sm-9">
+                        <p>checkerタブページに移動し、取得した出席コードを入力後、チェックマークのボタンをクリックしてください。実際に出席コードを取得したときの時間と、あなたの学修番号が表示されます。captureにて出席コードを取得した際は自動的にcheckerタブの出席コード欄にも取得した出席コードが入力されていますので，コピペの手間が軽減されます．
+                        </p>
+                    </dd>
+
+                    <dt class="col-sm-3">3. 出席コードを保管する</dt>
+                    <dd class="col-sm-9">
+                        <p>
+                            checkerタブのAddボタンを押すと取得した出席コードを一時的に保管しておくことができます。出席コードの保管はあくまでも、ご自身の責任で管理してください。本アプリを利用して万が一保存していた出席コードが消えてしまった場合、こちらは一切の責任を持ちません。必ず自分でメモ帳アプリなど別途保管してください。携帯の紛失、故障等の不足の事態に備えて保存場所は複数またはクラウドを利用するなど、ご自身で工夫してください。<span
+                                class="bg-warning">出席データの紛失に関してはこちらでは一切の考慮・配慮はしません．自己責任となります．</span>
+                        </p>
+                    </dd>
+
+                    <dt class="col-sm-3 text-truncate">4. 出席コードを提出する</dt>
+                    <dd class="col-sm-9">
+                        <p>
+                            すべての授業回で取得した出席コードをまとめてkibacoに提出していただきます。checkerページの下に、「提出用出席データを作成する」というアコーディオンボタンがあるので、こちらをクリックすると各授業会の出席コードを入力し，提出データ（CSV形式）を作成することができます．
+                        </p>
+                    </dd>
+
+                </dl>
+                <hr>
+                <h3 class="mt-4">困ったとき</h3>
+                <dl class="row mt-3">
+                    <dt class="col-sm-3">出席コードを紛失してしまいました</dt>
+                    <dd class="col-sm-9">
+                        <p>
+                            <span class="bg-warning">出席データの紛失に関してはこちらでは一切の考慮・配慮はしません．自己責任となります．</span>
+                            出席コードはご自身でしっかりと管理してください。2重保存や、クラウド利用，スクリーンショットを取るなどもよいでしょう．
+                        </p>
+                    </dd>
+
+                    <dt class="col-sm-3">正しいコードなのにエラーになります．</dt>
+                    <dd class="col-sm-9">
+                        <p>
+                            TAに代理でコード取得をしてもらった場合，TAから提示された画面をスクリーンショットしておき，後日出席コードを手打ちする場合があります．この際に各種記号で間違えやすいものがありますので，ご注意ください．参考までに出席コード確認で表示されるフォントタイプの文字一覧を以下に掲載します．
+
+                        </p>
+                        <p id="code_font_sample">
+                            abcdefghijklmnopqrstuvwxyz<br>
+                            ABCDEFGHIJKLMNOPQRSTUVWXYZX<br>
+                            0123456789-^\=~|@[;:],./_`{+*}<>?_
+                        </p>
+                    </dd>
+
+                    <dt class="col-sm-3">カメラが起動しません</dt>
+                    <dd class="col-sm-9">
+                        <p>
+                            QRコードボタンを押した際、OS側からカメラ起動の許可を尋ねられます。その際に許可をしないとカメラが起動しません。また背面カメラが無いスマートフォンでは動作確認は行っておりませんので、カメラ起動に問題が生じた場合は教員、TAにすぐに相談してください。
+                        </p>
+                    </dd>
+
+                    <dt class="col-sm-3">カメラがQRコードを認識しません</dt>
+                    <dd class="col-sm-9">
+                        <p>
+                            QRコードに近づき過ぎたり、遠すぎたりするとうまく認識できない場合があります。どうしてもうまくいかない場合は必ず授業時間内に教員またはTAに相談してください。遡って出席コードを発行することはできません。
+                        </p>
+                    </dd>
+
+                    <dt class="col-sm-3 text-truncate">スマホのバッテリーが切れました／スマホを忘れました</dt>
+                    <dd class="col-sm-9">
+                        <p>
+                            スマホのバッテリーが切れてしまい，または忘れてしまいQRコードを読むことができない場合は、TAに相談し、代わりに出席コードを取得してもらってください。なお、本システムはスマホ、タブレット、PCでも動作しますので、例えばカメラ付きノートパソコンをお持ちの場合はそちらでもQRコードから出席コードを取得することが可能です。<span
+                                class="bg-warning text-black">学修番号は一度設定すると10分間変更できません．友人のスマートフォンで変わりに出席をとってもらうと，友人の学修番号で出席コードを取得してしまったり，友人に落ち着いて出席コード取得をさせることができなくなるなど，事故のもとになります．必ずTAに依頼して出席コードの代理取得を行ってください</span>
+                        </p>
+                    </dd>
+
+                    <dt class="col-sm-3 text-truncate">Timeout と表示され、出席コードが取得できませんでした</dt>
+                    <dd class="col-sm-9">
+                        <p>
+                            QRコードが更新されるギリギリに読み取りを行うとTimeoutとして出席コードが取得できない場合があります。QRコード切り替わり後に再度お試しください。
+                        </p>
+                    </dd>
+
+                </dl>
+            </div>
+        </div>
+
+        <hr>
+        <footer class="small text-muted text-center">
+            2023 &copy; <a class="link-secondary" href="https://tetsuakibaba.jp" target="_blank">Tetsuaki BABA</a>
+        </footer>
+    </div>
+
+    <script src="./js/capture.js"></script>
+    <script src="./js/checker.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+
+
+</body>
+
+</html>
