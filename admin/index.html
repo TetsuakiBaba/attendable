@@ -63,21 +63,33 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-sm">
+            <a class="navbar-brand position-relative mt-2">
+                <img src="../favicons/favicon-72.png" class="me-1" width="24" style="margin-top:-0.25em;">
+                <strong>Attendable</strong>
+
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style="font-size:0.5em;">
+                    admin
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+            </a>
+        </div>
+    </nav>
+
     <div class="container-sm">
 
-        <nav class="navbar navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand">
-                    <img src="../favicons/favicon-72.png" width="24">
-                    Attendable <span class="small text-muted"> - Dashboard</span>
-                </a>
-            </div>
-        </nav>
+
 
         <div class="form-floating mt-3">
             <input type="text" class="form-control is-invalid" id="classname" value="デザインと生活"
                 placeholder="name@example.com" onchange="setClassname();">
             <label for="classname">授業名を入力（必須）</label>
+            <div class="mt-2 alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Existed DBs:</strong> <span id="existed_dbs"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
 
         <nav>
@@ -121,9 +133,10 @@
                 </div>
             </div>
             <div class="mt-4 tab-pane fade" id="nav-coupon" role="tabpanel" aria-labelledby="nav-coupon-tab">
-                <div class="mt-4 alert alert-danger" id="alert" role="alert">
+                <div class="alert alert-danger alert-dismissible fade show" id="alert" role="alert">
                     <span
-                        class="small">発行機能は、学生がうまくQRコードを読み取れなかった場合に利用します。対面時は学生がこの画面をカメラ撮影し、オンライン時は取得した出席コードをTAが当該学生に送信すること</span>
+                        class="small">発行機能は、学生がうまくQRコードを読み取れなかった場合に利用します。対面時は学生がこの画面をカメラ撮影し、オンライン時は取得した出席コードをTAが当該学生に送信してください。なお日付指定のチェックを外すとその日の日付になります。授業中や授業後の個別対応で授業コードを発行する場合は日付指定のチェックを外したまま出席コードを生成すると便利です。</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
 
@@ -142,7 +155,7 @@
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="id" placeholder="name@example.com"
                                 autocomplete="off" oninput="checkChar(this);">
-                            <label for=" floatingInput">学修番号</label>
+                            <label for="floatingInput">学生番号</label>
                         </div>
                     </div>
                     <div class="col-3">
@@ -182,11 +195,14 @@
             </div>
 
             <div class="mt-4 tab-pane fade" id="nav-totaling" role="tabpanel" aria-labelledby="nav-totaling-tab">
+                <div class="alert alert-danger alert-dismissible fade show small" role="alert">
+                    出席を最初にとっていないと、該当するデータがないため出席一覧は作成することができませんのでご注意ください。その上で、画面上部の授業名がExisted
+                    DBs欄に存在することを確認し、出席一覧表示ボタン、出席一覧テーブル作成の順でボタンを押すと、各学生番号ごとの出席データを作成できます。
 
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 <h4>表示</h4>
                 <button class="btn btn-primary mb-2" type="button" onclick="getAllAttendanceData();">出席一覧を表示</button>
-
-
                 <div id="table_show_all_attendance_data"></div>
                 <hr>
 

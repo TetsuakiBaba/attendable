@@ -1,3 +1,9 @@
+var version_date = `
+last modified: 2023/10/23 01:06:48
+`;
+// version_dataからスペースと改行を削除
+version_date = version_date.replace(/\n/g, "");
+document.querySelector('#version_date').innerHTML = version_date;
 
 
 // https://support.createwebflow.jp/manual/files/v5/reverse/reverse/workflow_design/form/form_half-character-only.html
@@ -46,13 +52,12 @@ async function getEncodedString(timestamp, classname, id) {
         });
 
         const res = await response.json();
-        // console.log(res);
 
         if (res.message === 'Success') {
             document.querySelector('#input_attendance_code').value = res.encoded_text;
             document.querySelector('#alert').classList = 'alert alert-success';
-            document.querySelector('#attendance_code').value = res.encoded_text;
-            copyAttendanceCode();
+            // copyAttendanceCode();
+
             return param;
         } else {
             document.querySelector('#input_attendance_code').value = res.message;
@@ -63,9 +68,10 @@ async function getEncodedString(timestamp, classname, id) {
             document.querySelector('#alert').classList = 'alert alert-secondary';
         }, 5000);
 
+
         return null;
     } catch (error) {
-        // console.log(error);
+        console.error("Error", error);
         return null;
     }
 }
@@ -133,7 +139,7 @@ function saveIDtoLocalStorage(_id) {
 
 
         if (pasttime > waiting_time) {
-            if (confirm(`学修番号の入力・変更は ${waiting_time / 60000} 分に一度だけしかできません。よろしいですか？`)) {
+            if (confirm(`学生番号の入力・変更は ${waiting_time / 60000} 分に一度だけしかできません。よろしいですか？`)) {
                 localStorage.setItem('ID', _id);
                 document.querySelector('#id').value = _id;
                 localStorage.setItem('timestamp', now.getTime());
@@ -155,7 +161,7 @@ var is_camera_open = false;
 async function toggleCamera() {
 
     if (document.querySelector('#id').value == '') {
-        alert('学修番号を入力してください\nInput your student number');
+        alert('学生番号を入力してください\nInput your student number');
         return;
     }
 
@@ -245,10 +251,15 @@ async function tick() {
             let classname = code_data[1];
 
             let ret_string = await getEncodedString(timestamp, classname, document.querySelector('#id').value);
+            // console.log(ret_string);
             stopCamera();
 
-            alert('出席登録が成功しました。Confirmボタンを押して正しく出席登録されているのを確認したら、必要に応じてAddボタンで出席コードを追加してください。\nAttendance registration was successful. If you have confirmed that the attendance registration is correct, add the attendance code as necessary by pressing the Add button.');
-
+            if (ret_string == null) {
+                alert('出席登録が失敗しました。もう一度お試しください。\nAttendance registration failed. Please try again.')
+            }
+            else {
+                alert('出席登録が成功しました。Confirmボタンを押して正しく出席登録されているのを確認したら、必要に応じてAddボタンで出席コードを追加してください。\nAttendance registration was successful. If you have confirmed that the attendance registration is correct, add the attendance code as necessary by pressing the Add button.');
+            }
             return;
         } else {
         }

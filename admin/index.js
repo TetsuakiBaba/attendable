@@ -1,3 +1,6 @@
+// onloadイベント
+
+
 // https://support.createwebflow.jp/manual/files/v5/reverse/reverse/workflow_design/form/form_half-character-only.html
 function checkChar(elm) {
     var txt = elm.value;
@@ -276,6 +279,17 @@ window.addEventListener('load', (event) => {
     // 授業名を取得
     document.querySelector('#classname').value = localStorage.getItem('classname');
     startQR();
+
+    fetch('getDBList.php')  // PHPスクリプトのURLを指定
+        .then(response => response.json())
+        .then(dbFiles => {
+            console.log(dbFiles);  // dbFilesはSQLiteデータベースの名前の配列
+            // dbFilesの中身を#db_listに表示する
+            document.querySelector('#existed_dbs').innerHTML = dbFiles;
+
+        })
+        .catch(error => console.error('Error:', error));
+
 });
 
 function startQR() {
