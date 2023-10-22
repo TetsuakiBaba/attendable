@@ -17,10 +17,14 @@
 
 ## Getting Started
 ```
+git clone https://github.com/TetsuakiBaba/attendable.git
+cd attendable
 echo '<?PHP key="your_secret_random_pass_phrase_key" ?>' > key.php
 php -S localhost:8000
 ```
-
+ブラウザてlocalhost:8000にアクセスすると利用できます。
+ * /admin/index.html 教員用QRコード生成ページ
+ * /index.html 学生用QRコード読み取りページ
 
 ## 利用している技術
  * PHP, SQLITE
