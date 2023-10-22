@@ -67,16 +67,15 @@
 </head>
 
 <body>
+    <nav class="navbar bg-light" data-bs-theme="light">
+        <div class="container-sm">
+            <span class="navbar-brand">
+                <img src="./favicons/favicon-72.png" width="24" class="me-2">
+                Attendable 2.0</span>
+        </div>
+    </nav>
     <div class="container-sm">
 
-        <nav class="navbar navbar-light bg-light">
-            <div class="container-fluid">
-
-                <a class="navbar-brand">
-                    <img src="./favicons/favicon-72.png" width="24" class="me-2">
-                    Attendable 2023</a>
-            </div>
-        </nav>
 
         <nav>
             <div class="nav nav-tabs mt-4" id="nav-tab" role="tablist">
@@ -167,7 +166,9 @@
                     <div class="row">
                         <div class="col-12">
                             <strong>出席日: </strong><span id="timestamp"></span><br>
+                            <strong>授業名：</strong><span id="classname"></span><br>
                             <strong>学修番号：</strong><span id="encoded_id"></span>
+
                         </div>
                         <div class="d-grid gap-2">
                             <button type="button" class="btn btn-secondary" id="button_add_attendance_code"
@@ -472,13 +473,16 @@
 
         <hr>
         <footer class="small text-muted text-center">
+            <span id="version">
+
+            </span>
             2023 &copy; <a class="link-secondary" href="https://tetsuakibaba.jp" target="_blank">Tetsuaki BABA</a>
         </footer>
     </div>
 
     <script src="./js/capture.js"></script>
     <script src="./js/checker.js"></script>
-    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
 
 
 </body>

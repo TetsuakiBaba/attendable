@@ -1,6 +1,9 @@
 key.php
 test.db
 test.php
+test.js
+test.csv
+*.db
 admin/sample_data/
 admin/.htaccess
 admin/.htpasswd

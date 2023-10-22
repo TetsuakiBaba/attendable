@@ -1,42 +1,26 @@
-// 1: ボタンを取得してchangeイベントの設定
-var loadBtn = document.querySelector("#loadBtn");
-loadBtn.addEventListener("change", upload, false);
 
-function upload(event) {
-  // 2：chekFileReader関数でFileAPIにブラウザが対応してるかチェック
-  if (!checkFileReader()) {
-    alert("エラー：FileAPI非対応のブラウザです。");
-  } else {
-    // 3: 選択されたファイル情報を取得
-    var file = event.target.files[0];
-    var type = file.type; // MIMEタイプ
-    var size = file.size; // ファイル容量（byte）
-    var limit = 10000000; // byte, 10KB
+function getStudentNumberFromKibacoID(id) {
+  // 現在の年度下二桁を求める
+  let year = new Date().getFullYear() - 2000;
 
-    console.log(type);
-    // MIMEタイプの判定
-    if (type != "text/csv") {
-      alert("csv以外は読み込めません");
-      loadBtn.value = "";
-      return;
+  let y10 = parseInt(year.toString().slice(0, 1));
+  let y1 = parseInt(year.toString().slice(1, 2));
+  let ky1 = parseInt(id.slice(1, 2));
+  let ky10 = 0;
+  /**
+  year: 10の段 y10, 1の段 y1
+  kibaco year: 10の段 ky10, ky1
+  */
+
+  if (ky1 > y1) {
+    ky10 = y10 - 1;
+    if (y10 * 10 + y1 - (ky10 * 10 + ky1) > 8) {
+      alert("在籍し得ないkibaco idです: " + id);
     }
-
-    //readerオブジェクトを作成
-    var reader = new FileReader();
-    // ファイル読み取りを実行
-    reader.readAsText(file);
-
-    // 4：CSVファイルを読み込む処理とエラー処理をする
-    reader.onload = function (event) {
-      var result = event.target.result;
-      makeCSV(result);
-    };
-
-    //読み込めなかった場合のエラー処理
-    reader.onerror = function () {
-      alert("エラー：ファイルをロードできません。");
-    };
+  } else {
+    ky10 = y10;
   }
+  return ky10.toString() + id.slice(1);
 }
 
 function createAttendanceTable() {
@@ -49,55 +33,65 @@ function createAttendanceTable() {
   */
   let attendance = [];
   let numbers = [];
+  let dates_and_times = [];
   let dates = [];
+
   let trs = document.querySelectorAll('tr');
 
+  /*
+  学修番号、日時、日付　の順にテーブルを作成する
+  */
   for (let i = 0; i < trs.length - 1; i++) {
     let number = String(document.querySelector(`#number_${i}`).innerText);
-    number = 'u' + number.slice(1);
+    number = 'u' + number.slice(0);
     let timestamp = String(document.querySelector(`#date_${i}`).innerText);
     numbers.push(String(number));
-    dates.push(String(timestamp));
+    dates_and_times.push(String(timestamp));
     if (attendance[number]) {
-      attendance[number].dates.push(timestamp);
+      attendance[number].dates_and_times.push(timestamp);
     }
     else {
-      attendance[number] = { dates: [timestamp] };
+      attendance[number] = { dates_and_times: [timestamp] };
     }
   }
-  dates = new Set(dates);
-  dates = Array.from(dates).sort();
-  console.log(dates);
+
+  console.log(attendance);
+
+  dates_and_times = new Set(dates_and_times);
+  dates_and_times = Array.from(dates_and_times).sort();
+  console.log(dates_and_times);
 
   numbers = new Set(numbers);
   numbers = Array.from(numbers).sort();
   for (num of numbers) {
-    attendance[num].dates = new Set(attendance[num].dates);
-    attendance[num].dates = Array.from(attendance[num].dates).sort();
+    attendance[num].dates_and_times = new Set(attendance[num].dates_and_times);
+    attendance[num].dates_and_times = Array.from(attendance[num].dates_and_times).sort();
   }
 
 
   document.querySelector('#resulttable').innerHTML = "";
   let htmldata = "";
   htmldata = '<table class="mt-4 table table-striped table-sm table-light table-hover" style="font-size:0.1em">';
-  htmldata += '<th>Number</th>';
-  for (date of dates) {
-    htmldata += `<th>${date}</th>`;
+  htmldata += '<th>kibaco id</th>';
+  htmldata += '<th>student id</th>';
+  for (let date_and_time of dates_and_times) {
+    htmldata += `<th>${date_and_time}</th>`;
   }
   htmldata += `<th>sum</th>`;
 
   for (let number of numbers) {
     htmldata += `<tr>`;
     htmldata += `<th>${number}</th>`;
-    for (let i = 0; i < dates.length; i++) {
-      if (attendance[number].dates.includes(dates[i])) {
+    htmldata += `<td>${getStudentNumberFromKibacoID(number)}</td>`;
+    for (let i = 0; i < dates_and_times.length; i++) {
+      if (attendance[number].dates_and_times.includes(dates_and_times[i])) {
         htmldata += `<td>1</td>`;
       }
       else {
         htmldata += `<td>0</td>`;
       }
     }
-    htmldata += `<td>${attendance[number].dates.length}</td>`
+    htmldata += `<td>${attendance[number].dates_and_times.length}</td>`
     htmldata += `</tr>`;
   }
   htmldata += "</table>"
@@ -105,8 +99,21 @@ function createAttendanceTable() {
   //htmldata += "<tr><th>出席コード</th><th>学修番号</th><th>日付</th></tr>";
 
   TableExport(document.getElementsByTagName("table"), {
-    formats: ["csv"]
+    headers: true,                      // (Boolean), display table headers (th or td elements) in the <thead>, (default: true)
+    footers: true,                      // (Boolean), display table footers (th or td elements) in the <tfoot>, (default: false)
+    formats: ["csv", "txt"],    // (String[]), filetype(s) for the export, (default: ['xlsx', 'csv', 'txt'])
+    filename: "attendable",                     // (id, String), filename for the downloaded file, (default: 'id')
+    bootstrap: false,                   // (Boolean), style buttons using bootstrap, (default: true)
+    exportButtons: true,                // (Boolean), automatically generate the built-in export buttons for each of the specified formats (default: true)
+    position: "bottom",                 // (top, bottom), position of the caption element relative to table, (default: 'bottom')
+    ignoreRows: null,                   // (Number, Number[]), row indices to exclude from the exported file(s) (default: null)
+    ignoreCols: null,                   // (Number, Number[]), column indices to exclude from the exported file(s) (default: null)
+    trimWhitespace: true,               // (Boolean), remove all leading/trailing newlines, spaces, and tabs from cell text in the exported file(s) (default: false)
+    RTL: false,                         // (Boolean), set direction of the worksheet to right-to-left (default: false)
+    sheetname: "id"                     // (id, String), sheet name for the exported spreadsheet, (default: 'id')
   });
+
+
 }
 
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
@@ -123,7 +130,7 @@ async function decodeAllCode() {
 
   for (let i = 0; i < tds.length - 1; i++) {
     decodeCode(i);
-    await sleep(30);
+    await sleep(3);
   }
 }
 
@@ -146,7 +153,7 @@ function decodeCode(_i) {
         timestamp = timestamp.split(' ')[0];
         //console.log(results[1]);
         document.querySelector(`#date_${_i}`).innerHTML = String(timestamp);
-        document.querySelector(`#number_${_i}`).innerHTML = String(results[1]);
+        document.querySelector(`#number_${_i}`).innerHTML = String(results[2]);
       }
       else {
         //alert(res.message);

@@ -54,7 +54,6 @@
     <style>
         :root {
             $enable-cssgrid: true;
-
         }
 
         #input_attendance_code {
@@ -68,7 +67,6 @@
 
         <nav class="navbar navbar-light bg-light">
             <div class="container-fluid">
-
                 <a class="navbar-brand">
                     <img src="../favicons/favicon-72.png" width="24">
                     Attendable <span class="small text-muted"> - Dashboard</span>
@@ -76,17 +74,23 @@
             </div>
         </nav>
 
+        <div class="form-floating mt-3">
+            <input type="text" class="form-control is-invalid" id="classname" value="デザインと生活"
+                placeholder="name@example.com" onchange="setClassname();">
+            <label for="classname">授業名を入力（必須）</label>
+        </div>
+
         <nav>
             <div class="nav nav-tabs mt-4" id="nav-tab" role="tablist">
                 <button class="nav-link " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
                     type="button" role="tab" aria-controls="nav-home" aria-selected="true">最初に</button>
                 <button class="nav-link active" id="nav-generator-tab" data-bs-toggle="tab"
                     data-bs-target="#nav-generator" type="button" role="tab" aria-controls="nav-profile"
-                    aria-selected="false">generator</button>
+                    aria-selected="false">出席を取る</button>
                 <button class="nav-link" id="nav-coupon-tab" data-bs-toggle="tab" data-bs-target="#nav-coupon"
-                    type="button" role="tab" aria-controls="nav-coupon" aria-selected="false">coupon</button>
+                    type="button" role="tab" aria-controls="nav-coupon" aria-selected="false">発行</button>
                 <button class="nav-link" id="nav-totaling-tab" data-bs-toggle="tab" data-bs-target="#nav-totaling"
-                    type="button" role="tab" aria-controls="nav-totaling" aria-selected="false">集計</button>
+                    type="button" role="tab" aria-controls="nav-totaling" aria-selected="false">集計・データ操作</button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
@@ -118,7 +122,8 @@
             </div>
             <div class="mt-4 tab-pane fade" id="nav-coupon" role="tabpanel" aria-labelledby="nav-coupon-tab">
                 <div class="mt-4 alert alert-danger" id="alert" role="alert">
-                    <span class="small">対面時は学生がこの画面をカメラ撮影し、オンライン時は取得した出席コードをTAが当該学生に送信すること</span>
+                    <span
+                        class="small">発行機能は、学生がうまくQRコードを読み取れなかった場合に利用します。対面時は学生がこの画面をカメラ撮影し、オンライン時は取得した出席コードをTAが当該学生に送信すること</span>
                 </div>
 
 
@@ -178,22 +183,22 @@
 
             <div class="mt-4 tab-pane fade" id="nav-totaling" role="tabpanel" aria-labelledby="nav-totaling-tab">
 
-                <ol class="list-group list-group-numbered">
-                    <li class="list-group-item">
-                        CSVファイルを読み込んでください<input type="file" name="select" id="loadBtn">
+                <h4>表示</h4>
+                <button class="btn btn-primary mb-2" type="button" onclick="getAllAttendanceData();">出席一覧を表示</button>
 
-                    </li>
-                    <li class="list-group-item">
-                        読み込んだファイルが正しければ <button class="btn btn-primary"
-                            onclick="decodeAllCode()">情報取得ボタン</button>を押してください。
-                    </li>
-                    <li class="list-group-item">
-                        問題なくすべてデコードできたら <button class="btn btn-primary"
-                            onclick="createAttendanceTable()">出席一覧テーブル作成</button>を押してください。
-                    </li>
-                </ol>
+
+                <div id="table_show_all_attendance_data"></div>
+                <hr>
+
+                <h4>集計</h4>
+                <button class="btn btn-primary mb-2" id="button_totalling" onclick="createAttendanceTable()"
+                    disabled>出席一覧テーブル作成</button>
 
                 <div id="resulttable"></div>
+                <hr>
+                <h4>削除</h4>
+                <button class="btn btn-danger" type="button" id="button_to_delete_attendance_data"
+                    onclick="deleteAttendanceDatabase();">出席データベースの削除</button>
 
             </div>
 
@@ -206,13 +211,14 @@
         </footer>
     </div>
 
-
-    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
     <script src="./index.js"></script>
     <script src="./loadcsv.js"></script>
     <script src="./FileSaver.js"></script>
     <script src="./tableexport.js"></script>
+
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
 </body>
 
 </html>

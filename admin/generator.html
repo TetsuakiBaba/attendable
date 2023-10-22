@@ -59,7 +59,7 @@
 
         function startQR() {
 
-            // サーバのtimestampを暗号化してもらって、それを取得する。その後はtimestampを含めたQRを生成する
+            // サーバのtimestampを暗号化してもらって、それを取得する。その後はtimestampと授業名を含めたQRを生成する
             const param = {
                 type: "encode_generator"
             };
@@ -86,7 +86,7 @@
                         height: size,
                         margin: 20,
                         type: "svg",
-                        data: String(timestamp),
+                        data: `${String(timestamp)}`,
                         //data: "https://tetsuakibaba.jp",
                         //image: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
                         dotsOptions: {

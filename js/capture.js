@@ -25,13 +25,16 @@ function copyAttendanceCode() {
 }
 // QRコードのタイムスタンプと学修番号をエンコーダーに渡して
 // デコードされた文字列を取得する
-function getEncodedString(timestamp, id) {
+function getEncodedString(timestamp, classname, id) {
+    console.log("getEncodedString");
     const param = {
         type: 'registration',
         timestamp: timestamp, // タイムスタンプは暗号化されているが、そのまま送信
-        id: id
+        id: id,
+        classname: classname
     };
 
+    console.log(param);
     fetch('EncodeDecode.php', { // 第1引数に送り先
         method: 'POST', // メソッド指定
         headers: { 'Content-Type': 'application/json' }, // jsonを指定
@@ -39,7 +42,7 @@ function getEncodedString(timestamp, id) {
     })
         .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
         .then(res => {
-            //        console.log(res); // 返ってきたデータ
+            console.log(res); // 返ってきたデータ
             // 取得した出席コードをDOMにいれる
             if (res.message == 'Success') {
                 // alert背景をsuccessに
@@ -56,7 +59,9 @@ function getEncodedString(timestamp, id) {
             setTimeout(function () {
                 document.querySelector('#alert').classList = 'alert alert-secondary';
             }, 5000);
-        });
+        }).catch(error => {
+            console.log(error);
+        })
 }
 
 window.addEventListener('load', (event) => {
@@ -177,10 +182,18 @@ function tick() {
 
         // QRコードが見つかったとき
         if (code) {
-            let ret_string = getEncodedString(code.data, document.querySelector('#id').value);
+            // code.dataから空白を削除
+            code.data = code.data.replace(/\s+/g, "");
+            // code.dataをカンマで2つに分割
+            let code_data = code.data.split(',');
+            let timestamp = code_data[0];
+            let classname = code_data[1];
+
+            let ret_string = getEncodedString(timestamp, classname, document.querySelector('#id').value);
             stopCamera();
             canvasElement.hidden = true;
 
+            alert('出席登録が成功しました。取得した出席コードは大事に保管してください。');
             return;
         } else {
         }

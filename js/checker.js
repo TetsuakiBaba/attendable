@@ -27,7 +27,8 @@ function encodeMyCode() {
                 let timestamp = new Date(results[0] * 1000).toLocaleString({ timeZone: 'Asia/Tokyo' });
                 //console.log(results[1]);
                 document.querySelector('#timestamp').innerHTML = String(timestamp);
-                document.querySelector('#encoded_id').innerHTML = String(results[1]);
+                document.querySelector('#classname').innerHTML = String(decodeURIComponent(results[1]));
+                document.querySelector('#encoded_id').innerHTML = String(results[2]);
             }
             else {
                 alert(res.message);
