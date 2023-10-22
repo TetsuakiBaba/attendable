@@ -1,3 +1,5 @@
+
+
 // https://support.createwebflow.jp/manual/files/v5/reverse/reverse/workflow_design/form/form_half-character-only.html
 function checkChar(elm) {
     var txt = elm.value;
@@ -25,44 +27,87 @@ function copyAttendanceCode() {
 }
 // QRコードのタイムスタンプと学修番号をエンコーダーに渡して
 // デコードされた文字列を取得する
-function getEncodedString(timestamp, classname, id) {
-    console.log("getEncodedString");
+async function getEncodedString(timestamp, classname, id) {
+    // console.log("getEncodedString");
     const param = {
         type: 'registration',
-        timestamp: timestamp, // タイムスタンプは暗号化されているが、そのまま送信
+        timestamp: timestamp,
         id: id,
         classname: classname
     };
 
-    console.log(param);
-    fetch('EncodeDecode.php', { // 第1引数に送り先
-        method: 'POST', // メソッド指定
-        headers: { 'Content-Type': 'application/json' }, // jsonを指定
-        body: JSON.stringify(param) // json形式に変換して添付
-    })
-        .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
-        .then(res => {
-            console.log(res); // 返ってきたデータ
-            // 取得した出席コードをDOMにいれる
-            if (res.message == 'Success') {
-                // alert背景をsuccessに
-                document.querySelector('#input_attendance_code').value = res.encoded_text;
-                document.querySelector('#alert').classList = 'alert alert-success';
-                document.querySelector('#attendance_code').value = res.encoded_text;
-                copyAttendanceCode();
-            }
-            else {
-                // alert背景をdangerに
-                document.querySelector('#input_attendance_code').value = res.message;
-                document.querySelector('#alert').classList = 'alert alert-danger';
-            }
-            setTimeout(function () {
-                document.querySelector('#alert').classList = 'alert alert-secondary';
-            }, 5000);
-        }).catch(error => {
-            console.log(error);
-        })
+    // console.log(param);
+
+    try {
+        const response = await fetch('EncodeDecode.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(param)
+        });
+
+        const res = await response.json();
+        // console.log(res);
+
+        if (res.message === 'Success') {
+            document.querySelector('#input_attendance_code').value = res.encoded_text;
+            document.querySelector('#alert').classList = 'alert alert-success';
+            document.querySelector('#attendance_code').value = res.encoded_text;
+            copyAttendanceCode();
+            return param;
+        } else {
+            document.querySelector('#input_attendance_code').value = res.message;
+            document.querySelector('#alert').classList = 'alert alert-danger';
+        }
+
+        setTimeout(() => {
+            document.querySelector('#alert').classList = 'alert alert-secondary';
+        }, 5000);
+
+        return null;
+    } catch (error) {
+        // console.log(error);
+        return null;
+    }
 }
+
+// function getEncodedString(timestamp, classname, id) {
+//     console.log("getEncodedString");
+//     const param = {
+//         type: 'registration',
+//         timestamp: timestamp, // タイムスタンプは暗号化されているが、そのまま送信
+//         id: id,
+//         classname: classname
+//     };
+
+//     console.log(param);
+//     fetch('EncodeDecode.php', { // 第1引数に送り先
+//         method: 'POST', // メソッド指定
+//         headers: { 'Content-Type': 'application/json' }, // jsonを指定
+//         body: JSON.stringify(param) // json形式に変換して添付
+//     })
+//         .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
+//         .then(res => {
+//             console.log(res); // 返ってきたデータ
+//             // 取得した出席コードをDOMにいれる
+//             if (res.message == 'Success') {
+//                 // alert背景をsuccessに
+//                 document.querySelector('#input_attendance_code').value = res.encoded_text;
+//                 document.querySelector('#alert').classList = 'alert alert-success';
+//                 document.querySelector('#attendance_code').value = res.encoded_text;
+//                 copyAttendanceCode();
+//             }
+//             else {
+//                 // alert背景をdangerに
+//                 document.querySelector('#input_attendance_code').value = res.message;
+//                 document.querySelector('#alert').classList = 'alert alert-danger';
+//             }
+//             setTimeout(function () {
+//                 document.querySelector('#alert').classList = 'alert alert-secondary';
+//             }, 5000);
+//         }).catch(error => {
+//             console.log(error);
+//         })
+// }
 
 window.addEventListener('load', (event) => {
     //console.log('ページが完全に読み込まれました');
@@ -104,8 +149,7 @@ function saveIDtoLocalStorage(_id) {
 
 
 
-var canvasElement = document.getElementById("canvas");
-var canvas = canvasElement.getContext("2d");
+
 
 var is_camera_open = false;
 async function toggleCamera() {
@@ -119,7 +163,8 @@ async function toggleCamera() {
 
     // カメラを開く
     if (is_camera_open) {
-        //console.log("startCamera();")
+        //console.log("startCamera();") <canvas style="width:100%;margin:0;padding:0" id="canvas" hidden></canvas>
+        document.querySelector('#camera_placeholder').innerHTML = '<canvas style="width:100%;margin:0;padding:0" id="canvas"></canvas>';
         startCamera();
 
     }
@@ -136,6 +181,8 @@ var camera_stream;
 var video;
 var id_animation_request = null;
 function startCamera() {
+    var canvasElement = document.getElementById("canvas");
+    var canvas = canvasElement.getContext("2d");
 
     video = document.createElement("video");
     canvasElement.style.visibility = "visible";
@@ -152,6 +199,8 @@ function startCamera() {
 }
 
 function stopCamera() {
+    var canvasElement = document.getElementById("canvas");
+
     //console.log(window.cancelAnimationFrame(id_animation_request));
     camera_stream.getTracks().forEach(function (track) {
         track.stop();
@@ -163,10 +212,16 @@ function stopCamera() {
     document.querySelector('#button_toggle_camera').classList = "btn btn-secondary";
     setTimeout(function () {
         canvasElement.style.visibility = "collapse";
-    }, 100);
+        document.querySelector('#camera_placeholder').innerHTML = '';
+    }, 500);
 }
 
-function tick() {
+async function tick() {
+    var canvasElement = document.getElementById("canvas");
+    if (!canvasElement) {
+        return;  // ここで処理を中断
+    }
+    var canvas = canvasElement.getContext("2d");
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
         canvasElement.hidden = false;
 
@@ -189,11 +244,11 @@ function tick() {
             let timestamp = code_data[0];
             let classname = code_data[1];
 
-            let ret_string = getEncodedString(timestamp, classname, document.querySelector('#id').value);
+            let ret_string = await getEncodedString(timestamp, classname, document.querySelector('#id').value);
             stopCamera();
-            canvasElement.hidden = true;
 
-            alert('出席登録が成功しました。取得した出席コードは大事に保管してください。');
+            alert('出席登録が成功しました。Confirmボタンを押して正しく出席登録されているのを確認したら、必要に応じてAddボタンで出席コードを追加してください。\nAttendance registration was successful. If you have confirmed that the attendance registration is correct, add the attendance code as necessary by pressing the Add button.');
+
             return;
         } else {
         }

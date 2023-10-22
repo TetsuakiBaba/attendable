@@ -5,13 +5,13 @@ if (localStorage.getItem('attendable_codes')) {
 // QRコードのタイムスタンプと学修番号をエンコーダーに渡して
 // デコードされた文字列を取得する
 function encodeMyCode() {
-    if (document.querySelector('#attendance_code').value == '') {
-        alert("出席コードを貼り付けてください\nPaste your attendance code.")
+    if (document.querySelector('#input_attendance_code').value == '') {
+        alert("出席コードを取得／貼り付けてください\nPaste your attendance code.")
         return;
     }
     const param = {
         type: 'check',
-        encoded_text: document.querySelector('#attendance_code').value
+        encoded_text: document.querySelector('#input_attendance_code').value
     };
 
     fetch('EncodeDecode.php', { // 第1引数に送り先
@@ -26,9 +26,11 @@ function encodeMyCode() {
                 var results = res.decoded_text.split(',');
                 let timestamp = new Date(results[0] * 1000).toLocaleString({ timeZone: 'Asia/Tokyo' });
                 //console.log(results[1]);
-                document.querySelector('#timestamp').innerHTML = String(timestamp);
-                document.querySelector('#classname').innerHTML = String(decodeURIComponent(results[1]));
-                document.querySelector('#encoded_id').innerHTML = String(results[2]);
+                // document.querySelector('#timestamp').innerHTML = String(timestamp);
+                // document.querySelector('#classname').innerHTML = String(decodeURIComponent(results[1]));
+                // document.querySelector('#encoded_id').innerHTML = String(results[2]);
+                alert(`出席コードが正しくデコードされました\nYour attendance code was decoded correctly.
+                \n出席日時：${timestamp}\n授業名称：${decodeURIComponent(results[1])}\n学生番号：${results[2]}`);
             }
             else {
                 alert(res.message);
@@ -41,12 +43,12 @@ function encodeMyCode() {
 */
 function addAttendanceCode(dom) {
 
-    if (document.querySelector('#attendance_code').value == '') {
+    if (document.querySelector('#input_attendance_code').value == '') {
         alert('出席コードが入力されていません');
         return;
     }
     // 現在の出席コードをtextareaに追加
-    document.querySelector('#textarea_attendance_codes').value += document.querySelector('#attendance_code').value + '\n';
+    document.querySelector('#textarea_attendance_codes').value += document.querySelector('#input_attendance_code').value + '\n';
     localStorage.setItem('attendable_codes', document.querySelector('#textarea_attendance_codes').value);
 }
 

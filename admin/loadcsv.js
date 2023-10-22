@@ -43,7 +43,8 @@ function createAttendanceTable() {
   */
   for (let i = 0; i < trs.length - 1; i++) {
     let number = String(document.querySelector(`#number_${i}`).innerText);
-    number = 'u' + number.slice(0);
+    // number = 'u' + number.slice(0);
+    number = number.slice(0);
     let timestamp = String(document.querySelector(`#date_${i}`).innerText);
     numbers.push(String(number));
     dates_and_times.push(String(timestamp));
@@ -72,8 +73,7 @@ function createAttendanceTable() {
   document.querySelector('#resulttable').innerHTML = "";
   let htmldata = "";
   htmldata = '<table class="mt-4 table table-striped table-sm table-light table-hover" style="font-size:0.1em">';
-  htmldata += '<th>kibaco id</th>';
-  htmldata += '<th>student id</th>';
+  htmldata += '<th>studen id</th>';
   for (let date_and_time of dates_and_times) {
     htmldata += `<th>${date_and_time}</th>`;
   }
@@ -82,7 +82,7 @@ function createAttendanceTable() {
   for (let number of numbers) {
     htmldata += `<tr>`;
     htmldata += `<th>${number}</th>`;
-    htmldata += `<td>${getStudentNumberFromKibacoID(number)}</td>`;
+    // htmldata += `<td>${getStudentNumberFromKibacoID(number)}</td>`;
     for (let i = 0; i < dates_and_times.length; i++) {
       if (attendance[number].dates_and_times.includes(dates_and_times[i])) {
         htmldata += `<td>1</td>`;
