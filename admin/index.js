@@ -80,7 +80,7 @@ function getAllAttendanceData() {
                 let thead = document.createElement('thead');
                 let tr = document.createElement('tr');
                 let th = document.createElement('th');
-                th.innerHTML = '学修番号';
+                th.innerHTML = '学生番号';
                 th.id = 'number';
                 tr.appendChild(th);
                 th = document.createElement('th');
@@ -225,7 +225,7 @@ function deleteAttendanceDatabase() {
 
 function getAttendanceCode() {
     if (document.querySelector('#id').value == '') {
-        alert("学修番号を入力してください");
+        alert("学生番号を入力してください");
         return;
     }
 
@@ -237,7 +237,7 @@ function getAttendanceCode() {
             type: 'b83hgAnzjhdg1',
             id: document.querySelector('#id').value,
             date: Math.floor(date.getTime() / 1000),
-            classname: encodeURIComponent(document.querySelector('#classname').value)
+            classname: encodeURIComponent(document.querySelector('#classname').value),
         };
     }
     else {
@@ -245,7 +245,7 @@ function getAttendanceCode() {
             type: 'b83hgAnzjhdg1',
             id: document.querySelector('#id').value,
             date: 'no',
-            classname: encodeURIComponent(document.querySelector('#classname').value)
+            classname: encodeURIComponent(document.querySelector('#classname').value),
         };
     }
 
@@ -321,8 +321,7 @@ function startQR() {
                 height: size,
                 margin: 20,
                 type: "svg",
-                data: `${String(timestamp)}, ${encodeURIComponent(document.querySelector('#classname').value)
-                    } `,
+                data: `${String(timestamp)}, ${encodeURIComponent(document.querySelector('#classname').value)} `,
                 //data: `${ String(timestamp) } `,
                 //data: "https://tetsuakibaba.jp",
                 //image: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
@@ -353,7 +352,6 @@ function startQR() {
                     document.querySelector('#canvas').removeChild(document.querySelector('#canvas').firstElementChild);
                     clearInterval(id_interval);
 
-
                     // QRコードの作り直し
                     startQR();
                 }
@@ -367,7 +365,15 @@ function startQR() {
             }, 1000);
 
         });
-
-
-
 }
+
+function restartQR() {
+    // QRコードの作り直し
+    document.querySelector('#number_progress').ariaValueNow = 0;
+    document.querySelector('#number_progress').style = "width:0%";
+    document.querySelector('#canvas').removeChild(document.querySelector('#canvas').firstElementChild);
+    clearInterval(id_interval);
+
+    // QRコードの作り直し
+    startQR();
+}   

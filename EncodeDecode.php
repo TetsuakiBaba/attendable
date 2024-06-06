@@ -36,6 +36,7 @@ timestamp（暗号化）, idが送信されてくる。timestampをデコード�
     // タイムスタンプをデコード（読める形式になる）
     $timestamp = openssl_decrypt($timestamp, 'AES-128-ECB',  $key);
 
+    // 30秒以内にアクセスした要求であれば出席コードを発行し、データベース登録する
     if ((time() - $timestamp) < 31) {
         $encoded_text = $timestamp . ',' . $classname . ',' . $id;
         $encoded_text = openssl_encrypt($encoded_text, 'AES-128-ECB',  $key);
@@ -77,6 +78,7 @@ TAが学修番号を聞いて発行する特別な授業コード
 */ else if ($type == $coupon_code) {
     $id = $data->id;
     $classname = $data->classname;
+
 
     if ($data->date == "no") {
         $timestamp = time();

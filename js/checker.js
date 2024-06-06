@@ -19,23 +19,54 @@ function encodeMyCode() {
         headers: { 'Content-Type': 'application/json' }, // jsonを指定
         body: JSON.stringify(param) // json形式に変換して添付
     })
-        .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json(); // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
+        })
         .then(res => {
-            //console.log(res); // 返ってきたデータ
-            if (res.message == "Success") {
+            if (res.message === "Success") {
                 var results = res.decoded_text.split(',');
-                let timestamp = new Date(results[0] * 1000).toLocaleString({ timeZone: 'Asia/Tokyo' });
+                let timestamp = new Date(results[0] * 1000).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
                 //console.log(results[1]);
                 // document.querySelector('#timestamp').innerHTML = String(timestamp);
                 // document.querySelector('#classname').innerHTML = String(decodeURIComponent(results[1]));
                 // document.querySelector('#encoded_id').innerHTML = String(results[2]);
                 alert(`出席コードが正しくデコードされました\nYour attendance code was decoded correctly.
                 \n出席日時：${timestamp}\n授業名称：${decodeURIComponent(results[1])}\n学生番号：${results[2]}`);
+            } else {
+                alert(`出席コードが不正です（${res.message}）`);
             }
-            else {
-                alert(res.message);
-            }
+        })
+        .catch(error => {
+            console.error('出席コードが不正、またはサーバ処理エラーです', error);
+            alert('出席コードが不正、またはサーバ処理エラーです。');
         });
+
+
+    // fetch('EncodeDecode.php', { // 第1引数に送り先
+    //     method: 'POST', // メソッド指定
+    //     headers: { 'Content-Type': 'application/json' }, // jsonを指定
+    //     body: JSON.stringify(param) // json形式に変換して添付
+    // })
+    //     .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
+    //     .then(res => {
+    //         console.log(res);
+    //         if (res.message == "Success") {
+    //             var results = res.decoded_text.split(',');
+    //             let timestamp = new Date(results[0] * 1000).toLocaleString({ timeZone: 'Asia/Tokyo' });
+    //             //console.log(results[1]);
+    //             // document.querySelector('#timestamp').innerHTML = String(timestamp);
+    //             // document.querySelector('#classname').innerHTML = String(decodeURIComponent(results[1]));
+    //             // document.querySelector('#encoded_id').innerHTML = String(results[2]);
+    //             alert(`出席コードが正しくデコードされました\nYour attendance code was decoded correctly.
+    //             \n出席日時：${timestamp}\n授業名称：${decodeURIComponent(results[1])}\n学生番号：${results[2]}`);
+    //         }
+    //         else {
+    //             alert(res.message);
+    //         }
+    //     });
 }
 
 /**

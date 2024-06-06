@@ -72,7 +72,7 @@ function createAttendanceTable() {
 
   document.querySelector('#resulttable').innerHTML = "";
   let htmldata = "";
-  htmldata = '<table class="mt-4 table table-striped table-sm table-light table-hover" style="font-size:0.1em">';
+  htmldata = '<table class="mt-4 table table-striped table-sm table-light table-hover" style="font-size:1rem">';
   htmldata += '<th>studen id</th>';
   for (let date_and_time of dates_and_times) {
     htmldata += `<th>${date_and_time}</th>`;

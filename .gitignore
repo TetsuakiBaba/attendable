@@ -9,3 +9,4 @@ admin/.htaccess
 admin/.htpasswd
 .DS_Store
 .vs_code/
+.htaccess

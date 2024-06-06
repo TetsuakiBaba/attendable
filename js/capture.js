@@ -1,5 +1,5 @@
 var version_date = `
-last modified: 2023/10/23 01:06:48
+last modified: 2023/10/29 11:07:55
 `;
 // version_dataからスペースと改行を削除
 version_date = version_date.replace(/\n/g, "");
@@ -33,13 +33,13 @@ function copyAttendanceCode() {
 }
 // QRコードのタイムスタンプと学修番号をエンコーダーに渡して
 // デコードされた文字列を取得する
-async function getEncodedString(timestamp, classname, id) {
+async function getEncodedString(timestamp, classname, id, score) {
     // console.log("getEncodedString");
     const param = {
         type: 'registration',
         timestamp: timestamp,
         id: id,
-        classname: classname
+        classname: classname,
     };
 
     // console.log(param);
