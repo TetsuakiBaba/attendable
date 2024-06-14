@@ -1,5 +1,5 @@
 # attendable 2.1
-No more DAIHEN. 簡単で確実な出席取りシステム
+NO MORE 出席泥棒. 簡単で確実な出席取りシステム
 
 ## Version
  - [v2.1](https://github.com/TetsuakiBaba/attendable/tree/main)
