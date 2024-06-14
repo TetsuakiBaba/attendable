@@ -2,9 +2,32 @@ if (localStorage.getItem('attendable_codes')) {
     document.querySelector('#textarea_attendance_codes').value = localStorage.getItem('attendable_codes');
 }
 
-// QRコードのタイムスタンプと学修番号をエンコーダーに渡して
-// デコードされた文字列を取得する
-function encodeMyCode() {
+
+
+function formatDateString(unixTimestamp) {
+    const date = new Date(unixTimestamp * 1000);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function processDates(dates) {
+    const dateMap = new Map();
+
+    dates.forEach(timestamp => {
+        const formattedDate = formatDateString(timestamp);
+        if (!dateMap.has(formattedDate)) {
+            dateMap.set(formattedDate, timestamp);
+        }
+    });
+
+    return Array.from(dateMap.values());
+}
+
+
+// 出席コードを渡してデコードされた文字列を取得する
+function decodeMyCode() {
     if (document.querySelector('#input_attendance_code').value == '') {
         alert("出席コードを取得／貼り付けてください\nPaste your attendance code.")
         return;
@@ -33,9 +56,21 @@ function encodeMyCode() {
                 // document.querySelector('#timestamp').innerHTML = String(timestamp);
                 // document.querySelector('#classname').innerHTML = String(decodeURIComponent(results[1]));
                 // document.querySelector('#encoded_id').innerHTML = String(results[2]);
-                alert(`出席コードが正しくデコードされました\nYour attendance code was decoded correctly.
-                \n出席日時：${timestamp}\n授業名称：${decodeURIComponent(results[1])}\n学生番号：${results[2]}`);
-            } else {
+
+                // もしresにhistoryが含まれていれば
+                if (res.history) {
+                    let dates = res.history;
+                    const processedDates = processDates(dates);
+                    // dates を日付の配列に変換して表示
+                    alert(`出席コードが正しくデコードされました\nYour attendance code was decoded correctly.\n出席日時：${timestamp}\n授業名称：${decodeURIComponent(results[1])}\n学生番号：${results[2]}\n\n出席回数：${processedDates.length}\n出席履歴：${processedDates.map(formatDateString).join(', ')}`);
+                } else {
+                    alert(`出席コードが正しくデコードされました\nYour attendance code was decoded correctly.
+                    \n出席日時：${timestamp}\n授業名称：${decodeURIComponent(results[1])}\n学生番号：${results[2]}`);
+                }
+            }
+            else if (res.message == "check") {
+            }
+            else {
                 alert(`出席コードが不正です（${res.message}）`);
             }
         })

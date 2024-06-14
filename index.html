@@ -73,7 +73,7 @@
                 <img src="./favicons/favicon-72.png" width="24" class="me-1" style="margin-top:-0.25em;">
                 <span class="fw-bold">Attendable</span>
                 <span style="font-size:0.5em;">
-                    v2.0
+                    v2.1
                 </span>
             </span>
 
@@ -86,7 +86,9 @@
             <div class="nav nav-tabs mt-4" id="nav-tab" role="tablist">
                 <button class="nav-link link-secondary active" id="nav-capture-tab" data-bs-toggle="tab"
                     data-bs-target="#nav-capture" type="button" role="tab" aria-controls="nav-capture"
-                    aria-selected="true">capture</button>
+                    aria-selected="true">
+                    capture
+                </button>
                 <button class="nav-link link-secondary position-relative" id="nav-instruction-tab" data-bs-toggle="tab"
                     data-bs-target="#nav-instruction" type="button" role="tab" aria-controls="nav-instruction"
                     aria-selected="false">説明
@@ -111,15 +113,12 @@
                         <div class="d-grid">
                             <button type=" button" class="btn btn-secondary" id="button_toggle_camera"
                                 onclick="toggleCamera();">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="currentColor"
-                                    class="bi bi-qr-code-scan" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="2.7rem" fill="currentColor"
+                                    class="bi bi-camera" viewBox="0 0 16 16">
                                     <path
-                                        d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0v-3Zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5ZM.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5Zm15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5ZM4 4h1v1H4V4Z" />
-                                    <path d="M7 2H2v5h5V2ZM3 3h3v3H3V3Zm2 8H4v1h1v-1Z" />
-                                    <path d="M7 9H2v5h5V9Zm-4 1h3v3H3v-3Zm8-6h1v1h-1V4Z" />
+                                        d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z" />
                                     <path
-                                        d="M9 2h5v5H9V2Zm1 1v3h3V3h-3ZM8 8v2h1v1H8v1h2v-2h1v2h1v-1h2v-1h-3V8H8Zm2 2H9V9h1v1Zm4 2h-1v1h-2v1h3v-2Zm-4 2v-1H8v1h2Z" />
-                                    <path d="M12 9h2V8h-2v1Z" />
+                                        d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z" />
                                 </svg>
                             </button>
                         </div>
@@ -145,7 +144,7 @@
                             <div class="d-grid gap-2 d-flex justify-content-end">
                                 <button class="btn me-2 btn-outline-secondary" onclick="copyAttendanceCode();"
                                     id="button_copy_attendance_code" type="button" hidden>COPY</button>
-                                <button class="btn btn-outline-secondary" onclick="encodeMyCode();" type="button"><i
+                                <button class="btn btn-outline-secondary" onclick="decodeMyCode();" type="button"><i
                                         class="bi bi-check-circle"></i> Confirm</button>
                                 <button class="btn btn-outline-secondary" onclick="addAttendanceCode(this);"
                                     type="button"><i class="bi bi-plus-circle"></i> Add</button>
@@ -190,62 +189,6 @@
 
             </div>
 
-            <!-- checker 出席コード確認-->
-            <!-- <div class="row align-items-start mt-4">
-
-            </div>
-            <div class="alert alert-secondary" role="alert">
-                <div class="row">
-                    <div class="col-12">
-                        <strong>出席日: </strong><span id="timestamp"></span><br>
-                        <strong>授業名：</strong><span id="classname"></span><br>
-                        <strong>学修番号：</strong><span id="encoded_id"></span>
-
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-secondary" id="button_add_attendance_code"
-                            onclick="addAttendanceCode(this);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path
-                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                            </svg>
-                            Add
-                        </button>
-                    </div>
-                    <div class="col-12">
-                        <textarea class="form-control" style="font-size:0.6rem" rows="15" id="textarea_attendance_codes"
-                            onchange="saveCodesToLocalStorage();"></textarea>
-                    </div>
-                    <div class="d-grid gap-2 d-flex justify-content-end">
-
-                        <button class="btn btn-secondary" type="button" onclick="downloadTxt();">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-download" viewBox="0 0 16 16">
-                                <path
-                                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
-                                <path
-                                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
-
-                            </svg>
-                            Download
-                        </button>
-
-                        <button class="btn btn-secondary" type="button" onclick="shareTxt();">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-share-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z" />
-                            </svg>
-                            Share
-                        </button>
-
-                    </div>
-
-                </div>
-            </div> -->
-
             <div class="tab-pane fade" id="nav-instruction" role="tabpanel" aria-labelledby="nav-instruction-tab">
                 <div class="mt-4 alert alert-danger" role="alert">
                     重要なことが書かれていますので、本アプリケーションの利用に先立って必ず一度は目を通してください。
@@ -268,7 +211,7 @@
                 <dl class="row mt-3">
                     <dt class="col-sm-3">1. 出席コードを取得する</dt>
                     <dd class="col-sm-9">
-                        <p>captureタブに移動します。最初に学生番号（学籍番号／学修番号等）を入力してください。入力された学生番号は自動で端末に保存されるので初回以降は入力は不要です。次にQRコードボタンを押すとスマートフォンカメラが起動します。起動したカメラで教員が提示するQRコードを撮影します。QRコードが認識できるとカメラが自動で閉じ、取得した出席コード欄に取得されたコードが入力されます。
+                        <p>captureタブに移動します。最初に学生番号（学籍番号／学修番号等）を入力してください。入力された学生番号は自動で端末に保存されるので初回以降は入力は不要です。次にカメラボタンを押すとスマートフォンカメラが起動します。起動したカメラで教員が提示するQRコードを撮影します。QRコードが認識できるとカメラが自動で閉じ、取得した出席コード欄に取得されたコードが入力されます。
                         </p>
                     </dd>
 
@@ -276,15 +219,14 @@
                     <dd class="col-sm-9">
                         <p>
                             取得した出席コード欄の下にあるConfirm
-                            ボタンを押すと、サーバにアクセスして、出席コードに含まれる「出席日時」、「授業名」、「学生番号」を確認できます。ただしく登録できているかを確認してください。
+                            ボタンを押すと、サーバにアクセスして、出席コードに含まれる「出席日時」、「授業名」、「学生番号」を確認できます。また、合わせてこれまでの授業出席回数と出席が登録された日付も表示されます。もしご自身の認識と異なる場合は証明となる出席コードを教員、またはTAに知らせてください。
                         </p>
                     </dd>
 
                     <dt class="col-sm-3">3. 出席コードを保管する</dt>
                     <dd class="col-sm-9">
                         <p>
-                            Addボタンを押すと取得した出席コードを一時的に保管しておくことができます。出席コードの保管はあくまでも、ご自身の責任で管理してください。本アプリを利用して万が一保存していた出席コードが消えてしまった場合、こちらは一切の責任を持ちません。必ず自分でメモ帳アプリなど別途保管してください。携帯の紛失、故障等の不足の事態に備えて保存場所は複数またはクラウドを利用するなど、ご自身で工夫してください。<span
-                                class="bg-warning">出席データの紛失に関してはこちらでは一切の考慮・配慮はしません．自己責任となります．</span>
+                            Addボタンを押すと取得した出席コードを一時的に保管しておくことができます。出席コードの保管はあくまでも、ご自身の責任で管理してください。本アプリを利用して万が一保存していた出席コードが消えてしまった場合、こちらは一切の責任を持ちません。必ず自分でメモ帳アプリなど別途保管してください。携帯の紛失、故障等の不足の事態に備えて保存場所は複数またはクラウドを利用するなど、ご自身で工夫してください。<mark>出席データの紛失に関してはこちらでは一切の考慮・配慮はしません．自己責任となります．</mark>
                         </p>
                     </dd>
                 </dl>
@@ -294,17 +236,21 @@
                     <dt class="col-sm-3">出席コードを紛失してしまいました</dt>
                     <dd class="col-sm-9">
                         <p>
-                            出席登録情報はサーバ上に保管されており、定期的に教員から提示されます。教員から提示されない場合は、学生側から主張してください。一方でサーバに登録された出席情報とご自身の認識が異なる場合、あなたが手元に保存している出席コードを用いて、出席登録に対する修正主張（クレーム）をすることができます。これ以外での出席修正は教員側にミスがある場合を除き、対応しません。<span
-                                class="bg-warning">出席コードの紛失に関してはこちらでは一切の考慮・配慮はしません．自己責任となります．</span>
-                            出席コードはご自身でしっかりと管理してください。2重保存や、クラウド利用，スクリーンショットを取るなどもよいでしょう．
+                            <mark>出席コードの紛失に関してはこちらでは一切の考慮・配慮はしません．自己責任となります．</mark>
+                            出席コードはご自身でしっかりと管理してください。2重保存や、クラウド等を活用してください．
+                        </p>
+                    </dd>
+                    <dt class="col-sm-3">自分の認識と異なる出席回数や出席日がComfirm時に表示されます</dt>
+                    <dd class="col-sm-9">
+                        <p>
+                            あなたが出席コードを取得すると自動でその結果はサーバ上に保管されています。出席コードのConfirmを行うと、出席回数は登録した日付が表示されますので、サーバに登録された出席情報とご自身の認識が異なる場合、あなたが手元に保存している出席コードを用いて、出席登録に対する修正主張（クレーム）をすることができます
                         </p>
                     </dd>
 
                     <dt class="col-sm-3">正しいコードなのにエラーになります．</dt>
                     <dd class="col-sm-9">
                         <p>
-                            TAに代理でコード取得をしてもらった場合，TAから提示された画面をスクリーンショットしておき，後日出席コードを手打ちする場合があります．この際に各種記号で間違えやすいものがありますので，ご注意ください．参考までに出席コード確認で表示されるフォントタイプの文字一覧を以下に掲載します．
-
+                            <mark>出席コードを手打ちするとミスの元になります．スクリーンショットは利用しないでください．</mark>TAに代理で出席コードを発行してもらった場合も必ずkibaco等のメッセージで直接テキストを送りますので，そちらを保存してください．なお，参考までに以下は出席コードのフォントです．
                         </p>
                         <p id="code_font_sample">
                             abcdefghijklmnopqrstuvwxyz<br>
@@ -347,13 +293,13 @@
 
                 </dl>
             </div>
+
+
         </div>
 
         <hr>
         <footer class="small text-muted text-center">
-
-
-            2023 &copy; <a class="link-secondary" href="https://tetsuakibaba.jp" target="_blank">Tetsuaki BABA</a>
+            2024 &copy; <a class="link-secondary" href="https://tetsuakibaba.jp" target="_blank">Tetsuaki BABA</a>
             <br>
             <span id="version_date">
 
@@ -361,8 +307,8 @@
         </footer>
     </div>
 
-    <script src="./js/capture.js?v=05"></script>
-    <script src="./js/checker.js?v=05"></script>
+    <script src="./js/capture.js?v=2.1"></script>
+    <script src="./js/checker.js?v=2.1"></script>
     <script src="./js/bootstrap.bundle.min.js?v=01"></script>
 
 

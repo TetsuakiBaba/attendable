@@ -110,16 +110,35 @@ TAが学修番号を聞いて発行する特別な授業コード
 } else if ($type == "check") {
     $encoded_text = $data->encoded_text;
     $decoded_text = openssl_decrypt($encoded_text, 'AES-128-ECB', $key);
+
+
     if ($decoded_text == false) {
         $res = array(
             "message" => 'Error: Invalid encoded string',
             "decoded_text" => $decoded_text
         );
     } else {
-        $res = array(
-            "message" => 'Success',
-            "decoded_text" => $decoded_text
-        );
+        // idを取得して、一致するデータベースのレコードを配列で取得する
+        $id = explode(',', $decoded_text)[2];
+        $classname = explode(',', $decoded_text)[1];
+        $db_filename = $classname . '.db';
+        if (file_exists($db_filename)) {
+            $db = new SQLite3($db_filename);
+            $results = $db->query('SELECT * FROM users WHERE id = "' . $id . '"');
+            $res = array(
+                "message" => 'Success',
+                "decoded_text" => $decoded_text,
+                "history" => array()
+            );
+            // 結果をループし、timestampのみをdata配列に追加
+            while ($row = $results->fetchArray()) {
+                array_push($res["history"], $row['timestamp']);
+            }
+        } else {
+            $res = array(
+                "message" => 'Error: Database not found',
+            );
+        }
     }
 } else if ($type == "delete_attendance_database") {
     // データベースを削除する

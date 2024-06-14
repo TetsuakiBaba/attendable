@@ -1,5 +1,5 @@
 var version_date = `
-last modified: 2023/10/29 11:07:55
+last modified: 2024/06/14 10:18:33
 `;
 // version_dataからスペースと改行を削除
 version_date = version_date.replace(/\n/g, "");
