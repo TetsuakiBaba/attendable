@@ -72,8 +72,7 @@
             <span class="navbar-brand">
                 <img src="./favicons/favicon-72.png" width="24" class="me-1" style="margin-top:-0.25em;">
                 <span class="fw-bold">Attendable</span>
-                <span style="font-size:0.5em;">
-                    v2.1
+                <span style="font-size:0.5em;" id="title_version">
                 </span>
             </span>
 
@@ -307,9 +306,15 @@
         </footer>
     </div>
 
+    <script src="./js/version.js?v=2.1"></script>
     <script src="./js/capture.js?v=2.1"></script>
     <script src="./js/checker.js?v=2.1"></script>
     <script src="./js/bootstrap.bundle.min.js?v=01"></script>
+
+
+    <script>
+        document.querySelector("#title_version").innerHTML = short_version;
+    </script>
 
 
 

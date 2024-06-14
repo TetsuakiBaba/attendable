@@ -54,6 +54,18 @@
 
     <title>atdbl.coupon</title>
     <style>
+        .form-check-input[type="checkbox"]:checked {
+            background-color: #dc3545;
+            /* Bootstrap 'danger' red */
+            border-color: #dc3545;
+        }
+
+        .form-check-input[type="checkbox"]:checked:focus {
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+            /* Slight red shadow */
+        }
+    </style>
+    <style>
         :root {
             $enable-cssgrid: true;
         }
@@ -70,7 +82,8 @@
             <a class="navbar-brand position-relative mt-2">
                 <img src="../favicons/favicon-72.png" class="me-1" width="24" style="margin-top:-0.25em;">
                 <strong>Attendable</strong>
-
+                <span style="font-size:0.6em;" id="title_version">
+                </span>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                     style="font-size:0.5em;">
                     admin
@@ -216,10 +229,22 @@
                 <h4>削除</h4>
 
                 <div class="alert alert-danger" role="alert">
-                    <strong>Danger zone</strong><br>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                            onclick="toggleDangerButtonDisabled()">
+                        </input>
+                        <label class="form-check-label" for="flexSwitchCheckDefault"><strong>Activate Database Deletion
+                                Button</strong></label>
+                    </div>
                     <hr>
                     <button class="btn btn-danger" type="button" id="button_to_delete_attendance_data"
-                        onclick="deleteAttendanceDatabase();">出席データベースの削除</button>
+                        onclick="deleteAttendanceDatabase();" disabled>出席データベースの削除</button>
+                    <script>
+                        function toggleDangerButtonDisabled() {
+                            var button = document.getElementById("button_to_delete_attendance_data");
+                            button.disabled = !button.disabled;
+                        }
+                    </script>
                 </div>
 
 
@@ -236,6 +261,7 @@
         </footer>
     </div>
 
+    <script src="../js/version.js?v=2.1"></script>
     <script src="./index.js"></script>
     <script src="./loadcsv.js"></script>
     <script src="./FileSaver.js"></script>
@@ -243,6 +269,10 @@
 
     <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.querySelector('#title_version').textContent = short_version;
+    </script>
 
 </body>
 
