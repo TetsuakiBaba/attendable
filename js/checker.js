@@ -1,8 +1,19 @@
+let version_date_checker_js = `
+last modified: 2024/06/23 11:21:03
+`;
+
+
+// version_dataからlast modified: とスペース、改行を削除
+version_date_checker_js = version_date_checker_js.replace(/last modified: /g, '');
+version_date_checker_js = version_date_checker_js.replace(/\n/g, '');
+document.querySelector('#version_date').innerHTML += `<br>checker.js: ${version_date_checker_js}`;
+
+
+
+
 if (localStorage.getItem('attendable_codes')) {
     document.querySelector('#textarea_attendance_codes').value = localStorage.getItem('attendable_codes');
 }
-
-
 
 function formatDateString(unixTimestamp) {
     const date = new Date(unixTimestamp * 1000);

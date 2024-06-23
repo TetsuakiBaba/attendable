@@ -1,9 +1,12 @@
-var version_date = `
-last modified: 2024/06/14 10:18:33
+let version_date_capture_js = `
+last modified: 2024/06/23 12:30:47
 `;
-// version_dataからスペースと改行を削除
-version_date = version_date.replace(/\n/g, "");
-document.querySelector('#version_date').innerHTML = version_date;
+
+
+// version_dataからlast modified: とスペース、改行を削除
+version_date_capture_js = version_date_capture_js.replace(/last modified: /g, '');
+version_date_capture_js = version_date_capture_js.replace(/\n/g, '');
+document.querySelector('#version_date').innerHTML += `capture.js: ${version_date_capture_js}`;
 
 
 // https://support.createwebflow.jp/manual/files/v5/reverse/reverse/workflow_design/form/form_half-character-only.html
@@ -115,12 +118,9 @@ async function getEncodedString(timestamp, classname, id, score) {
 //         })
 // }
 
-window.addEventListener('load', (event) => {
-    //console.log('ページが完全に読み込まれました');
-    document.getElementById('id').value = localStorage.getItem('ID');
-    //console.log(localStorage.getItem('ID'));
 
-});
+document.getElementById('id').value = localStorage.getItem('ID');
+
 function saveIDtoLocalStorage(_id) {
     let id_previous = document.getElementById('id').value = localStorage.getItem('ID');
     if (_id != id_previous) {
@@ -161,7 +161,7 @@ var is_camera_open = false;
 async function toggleCamera() {
 
     if (document.querySelector('#id').value == '') {
-        alert('学生番号を入力してください\nInput your student number');
+        alert('学生番号を入力してからカメラを起動してください\nInput your student number before starting the camera.');
         return;
     }
 
@@ -170,7 +170,7 @@ async function toggleCamera() {
     // カメラを開く
     if (is_camera_open) {
         //console.log("startCamera();") <canvas style="width:100%;margin:0;padding:0" id="canvas" hidden></canvas>
-        document.querySelector('#camera_placeholder').innerHTML = '<canvas style="width:100%;margin:0;padding:0" id="canvas"></canvas>';
+        document.querySelector('#camera_placeholder').innerHTML = '<canvas style="width:100%;margin:0;padding:0;border-radius: 0.4rem;border:0px solid #000" class="" id="canvas"></canvas>';
         startCamera();
 
     }
@@ -201,7 +201,7 @@ function startCamera() {
             video.play();
             id_animation_request = window.requestAnimationFrame(tick);
         });
-    document.querySelector('#button_toggle_camera').classList = "btn btn-danger";
+    document.querySelector('#button_toggle_camera').classList = "btn btn-danger rounded-pill";
 }
 
 function stopCamera() {
@@ -215,7 +215,7 @@ function stopCamera() {
     //canvasElement.style.visibility = "hidden";
 
     is_camera_open = false;
-    document.querySelector('#button_toggle_camera').classList = "btn btn-secondary";
+    document.querySelector('#button_toggle_camera').classList = "btn btn-secondary rounded-pill";
     setTimeout(function () {
         canvasElement.style.visibility = "collapse";
         document.querySelector('#camera_placeholder').innerHTML = '';

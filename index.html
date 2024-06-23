@@ -5,7 +5,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <!-- For old IEs -->
     <link rel="shortcut icon" href="./favicons/favicon.ico" />
 
@@ -74,8 +73,10 @@
                 <span class="fw-bold">Attendable</span>
                 <span style="font-size:0.5em;" id="title_version">
                 </span>
-            </span>
 
+            </span>
+            <button class="btn rounded-pill btn-outline-secondary" onclick="location.reload();"><i
+                    class="bi bi-arrow-repeat"></i></button>
         </div>
     </nav>
     <div class="container-sm">
@@ -99,18 +100,18 @@
         </nav>
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-capture" role="tabpanel" aria-labelledby="nav-capture-tab">
-                <div class="row align-items-start mt-4">
+                <div class="row align-items-start mt-4 mb-2">
                     <div class="col-9">
-                        <div class="form-floating mb-3">
+                        <div class="form-floating">
                             <input type="text" class="form-control" id="id" placeholder="name@example.com"
                                 autocomplete="off" oninput="checkChar(this);"
                                 onchange="saveIDtoLocalStorage(this.value);">
-                            <label for="floatingInput">学生番号</label>
+                            <label for="id">学生番号</label>
                         </div>
                     </div>
                     <div class="col-3">
                         <div class="d-grid">
-                            <button type=" button" class="btn btn-secondary" id="button_toggle_camera"
+                            <button type="button" class="btn btn-secondary rounded-pill" id="button_toggle_camera"
                                 onclick="toggleCamera();">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="44" height="2.7rem" fill="currentColor"
                                     class="bi bi-camera" viewBox="0 0 16 16">
@@ -124,11 +125,13 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-12" id="camera_placeholder">
-
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <div id="camera_placeholder"></div>
                     </div>
                 </div>
+
+
 
                 <div class="row">
                     <div class="col-12">
@@ -306,14 +309,24 @@
         </footer>
     </div>
 
-    <script src="./js/version.js?v=2.1"></script>
-    <script src="./js/capture.js?v=2.1"></script>
-    <script src="./js/checker.js?v=2.1"></script>
-    <script src="./js/bootstrap.bundle.min.js?v=01"></script>
-
 
     <script>
-        document.querySelector("#title_version").innerHTML = short_version;
+        // window のロードが終わったら
+        window.onload = function () {
+            let script_version = 'v2.1.1';
+            let script_paths = [
+                './js/capture.js',
+                './js/checker.js',
+                './js/bootstrap.bundle.min.js'
+            ];
+            for (let path of script_paths) {
+                let script = document.createElement('script');
+                script.src = path + '?v=' + script_version;
+                document.head.appendChild(script);
+            }
+            document.querySelector("#title_version").innerHTML = script_version;
+        }
+
     </script>
 
 

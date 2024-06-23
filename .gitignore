@@ -10,3 +10,4 @@ admin/.htpasswd
 .DS_Store
 .vs_code/
 .htaccess
+upload.txt
