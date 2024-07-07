@@ -1,5 +1,5 @@
 let version_date_capture_js = `
-last modified: 2024/06/23 12:30:47
+last modified: 2024/07/07 22:23:30
 `;
 
 
@@ -155,6 +155,108 @@ function saveIDtoLocalStorage(_id) {
 
 
 
+async function listCameras4Safari() {
+    const cameraSelect = document.getElementById('camera-select');
+    try {
+        // 仮のカメラアクセスをリクエストしてユーザーの許可を取得
+        initialStream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+        // デバイスを列挙
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoInputs = devices.filter(device => device.kind === 'videoinput');
+        console.log(videoInputs);
+        // セレクトボックスをクリア
+        cameraSelect.innerHTML = '';
+
+        // カメラデバイスをセレクトボックスに追加
+        // const option = document.createElement('option');
+        // option.value = "default";
+        // option.text = `Choose Camera`;
+        // cameraSelect.appendChild(option);
+        videoInputs.forEach((device, index) => {
+            const option = document.createElement('option');
+            option.value = device.deviceId;
+            option.text = device.label || `camera ${index + 1} `;
+
+            // もしローカルストレージのカメラIDと一致したら選択状態にする
+            if (localStorage.getItem('camera_id') == device.deviceId) {
+                option.selected = true;
+            }
+
+            cameraSelect.appendChild(option);
+        });
+        // ストリームを停止してカメラをクローズ
+        if (initialStream) {
+            initialStream.getTracks().forEach(track => track.stop());
+        }
+    } catch (err) {
+        console.error('Error accessing media devices.', err);
+    }
+}
+async function listCameras() {
+    const cameraSelect = document.getElementById('camera-select');
+    try {
+        // デバイスを列挙
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoInputs = devices.filter(device => device.kind === 'videoinput');
+        console.log(videoInputs);
+        // セレクトボックスをクリア
+        cameraSelect.innerHTML = '';
+
+        // カメラデバイスをセレクトボックスに追加
+        // const option = document.createElement('option');
+        // option.value = "default";
+        // option.text = `Choose Camera`;
+        // cameraSelect.appendChild(option);
+        videoInputs.forEach((device, index) => {
+            const option = document.createElement('option');
+            option.value = device.deviceId;
+            option.text = device.label || `camera ${index + 1} `;
+
+            // もしローカルストレージのカメラIDと一致したら選択状態にする
+            if (localStorage.getItem('camera_id') == device.deviceId) {
+                option.selected = true;
+            }
+
+            cameraSelect.appendChild(option);
+        });
+    } catch (err) {
+        console.error('Error accessing media devices.', err);
+    }
+}
+
+
+function saveCameraIdtoLocalStorage() {
+    let camera_id = document.getElementById('camera-select').value;
+    localStorage.setItem('camera_id', camera_id);
+    console.log(localStorage.getItem('camera_id'));
+    tmpAlertFadeIn();
+    setTimeout(function () {
+        tmpAlertFadeOut();
+    }, 3000);
+}
+
+function tmpAlertFadeIn(message) {
+    var alertElement = document.querySelector('.tmpAlert');
+    alertElement.classList.remove('fade-out', 'alert', 'alert-success');
+    alertElement.classList.add('fade-in', 'alert', 'alert-success');
+    alertElement.innerHTML = 'デフォルトのカメラデバイス設定が保存されました。Default camera device setting has been saved.';
+    alertElement.style.opacity = 1; // 明示的に表示
+}
+
+function tmpAlertFadeOut() {
+    var alertElement = document.querySelector('.tmpAlert');
+    alertElement.classList.remove('fade-in');
+    alertElement.classList.add('fade-out', 'alert', 'alert-success');
+    // alertElementのcssエフェクトが終わったら中身を空にする
+    alertElement.addEventListener('animationend', () => {
+        alertElement.innerHTML = '';
+        alertElement.classList.remove('alert', 'alert-success');
+    }, { once: true });
+
+    alertElement.style.opacity = 0; // 明示的に非表示
+}
+
 
 
 var is_camera_open = false;
@@ -171,14 +273,43 @@ async function toggleCamera() {
     if (is_camera_open) {
         //console.log("startCamera();") <canvas style="width:100%;margin:0;padding:0" id="canvas" hidden></canvas>
         document.querySelector('#camera_placeholder').innerHTML = '<canvas style="width:100%;margin:0;padding:0;border-radius: 0.4rem;border:0px solid #000" class="" id="canvas"></canvas>';
-        startCamera();
+        await startCamera();
+
+        // ズーム機能を表示したいときには下のコメントを外してデバッグする
+        const videoTrack = camera_stream.getVideoTracks()[0];
+        let settings = videoTrack.getSettings();
+        let capabilities = videoTrack.getCapabilities();
+        // capabilities.zoom = { min: 1, max: 10, step: 0.1 };
+        // settings.zoom = 5;
+        if (capabilities.zoom) {
+            if (!capabilities.zoom.step) {
+                capabilities.zoom.step = 0.1;
+            }
+            document.getElementById('zoom_ui').innerHTML = `
+                    <div class="row mt-2 mb-2">
+                        <div class="col-2 text-end fs-4">
+                            <i class="bi bi-zoom-out"></i>
+                        </div>  
+                        <div class="col-8 text-center">
+                            <input type="range" class="form-range" min="${capabilities.zoom.min}" max="${capabilities.zoom.max}" value="${settings.zoom}" step="${capabilities.zoom.step}" id="zoom_ui_input">
+                        </div>
+                        <div class="col-2 text-start fs-4">
+                            <i class="bi bi-zoom-in"></i>
+                        </div>
+                    </div>
+                    `;
+            document.getElementById('zoom_ui_input').addEventListener('input', (event) => {
+                videoTrack.applyConstraints({ advanced: [{ zoom: parseFloat(event.target.value) }] });
+            });
+        }
+
 
     }
     // カメラを閉じる
     else {
         //console.log("stopCamera();")
         stopCamera();
-
+        document.getElementById('zoom_ui').innerHTML = '';
     }
 }
 
@@ -186,22 +317,35 @@ var camera_stream;
 
 var video;
 var id_animation_request = null;
-function startCamera() {
+async function startCamera() {
     var canvasElement = document.getElementById("canvas");
     var canvas = canvasElement.getContext("2d");
 
     video = document.createElement("video");
     canvasElement.style.visibility = "visible";
-    // Use facingMode: environment to attemt to get the front camera on phones
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-        .then(function (stream) {
-            video.srcObject = stream;
-            camera_stream = stream;
-            video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-            video.play();
-            id_animation_request = window.requestAnimationFrame(tick);
+    console.log(document.querySelector('#camera-select').value);
+
+    try {
+        // Use facingMode: environment to attempt to get the front camera on phones
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                deviceId: localStorage.getItem('camera_id'),
+                facingMode: "environment",
+                zoom: { ideal: 2.0 }
+            }
         });
-    document.querySelector('#button_toggle_camera').classList = "btn btn-danger rounded-pill";
+
+        video.srcObject = stream;
+        camera_stream = stream;
+        video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+        await video.play();
+        id_animation_request = window.requestAnimationFrame(tick);
+
+        document.querySelector('#button_toggle_camera').classList = "btn btn-danger rounded-pill";
+    } catch (error) {
+        console.error('Error accessing camera:', error);
+    }
+
 }
 
 function stopCamera() {
@@ -267,3 +411,5 @@ async function tick() {
     id_animation_request = requestAnimationFrame(tick);
 }
 
+
+listCameras();

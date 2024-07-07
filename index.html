@@ -62,6 +62,48 @@
         textarea {
             font-family: "Menlo", "Monaco", "Consolas", monospace;
         }
+
+        /* フェードインアニメーション */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* フェードアウトアニメーション */
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* フェードインを適用 */
+        .fade-in {
+            animation: fadeIn 1s forwards;
+            /* 1秒でフェードイン */
+        }
+
+        /* フェードアウトを適用 */
+        .fade-out {
+            animation: fadeOut 1s forwards;
+            /* 1秒でフェードアウト */
+        }
+
+        /* フェードイン、フェードアウトのトランジションを簡略化するためのスタイル */
+        .tmpAlert {
+            opacity: 0;
+            /* デフォルトでは非表示 */
+            transition: opacity 1s;
+            /* トランジション効果 */
+        }
     </style>
 </head>
 
@@ -80,8 +122,6 @@
         </div>
     </nav>
     <div class="container-sm">
-
-
         <nav>
             <div class="nav nav-tabs mt-4" id="nav-tab" role="tablist">
                 <button class="nav-link link-secondary active" id="nav-capture-tab" data-bs-toggle="tab"
@@ -89,16 +129,20 @@
                     aria-selected="true">
                     capture
                 </button>
+                <button class="nav-link link-secondary" id="nav-settings-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-settings" type="button" role="tab" aria-controls="nav-settings"
+                    aria-selected="true">
+                    設定
+                </button>
                 <button class="nav-link link-secondary position-relative" id="nav-instruction-tab" data-bs-toggle="tab"
                     data-bs-target="#nav-instruction" type="button" role="tab" aria-controls="nav-instruction"
                     aria-selected="false">説明
-                    <span class="position-absolute top-0 end-start translate-middle badge rounded-pill bg-danger">
-                        必読
-                    </span>
                 </button>
+
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
+
             <div class="tab-pane fade show active" id="nav-capture" role="tabpanel" aria-labelledby="nav-capture-tab">
                 <div class="row align-items-start mt-4 mb-2">
                     <div class="col-9">
@@ -113,7 +157,7 @@
                         <div class="d-grid">
                             <button type="button" class="btn btn-secondary rounded-pill" id="button_toggle_camera"
                                 onclick="toggleCamera();">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="2.7rem" fill="currentColor"
+                                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="currentColor"
                                     class="bi bi-camera" viewBox="0 0 16 16">
                                     <path
                                         d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z" />
@@ -128,6 +172,7 @@
                 <div class="row mb-2">
                     <div class="col-12">
                         <div id="camera_placeholder"></div>
+                        <span id="zoom_ui"></span>
                     </div>
                 </div>
 
@@ -189,6 +234,29 @@
                 </div>
 
 
+            </div>
+
+            <div class="tab-pane fade" id="nav-settings" role="tabpanel" aria-labelledby="nav-settings-tab">
+                <div class="row mt-3">
+                    <div class="col-12 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                カメラ設定
+                            </div>
+                            <div class="card-body">
+                                <p>QRコードを取得する時に使用するカメラを選択します。</p>
+                                <div class="input-group">
+                                    <button class="btn btn-outline-primary"
+                                        onclick="listCameras4Safari();">カメラ一覧の更新</button>
+                                    <select class="form-select" id="camera-select"
+                                        onchange="saveCameraIdtoLocalStorage();"></select>
+                                </div>
+                                <div class="tmpAlert mt-2"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="tab-pane fade" id="nav-instruction" role="tabpanel" aria-labelledby="nav-instruction-tab">
@@ -295,25 +363,30 @@
 
                 </dl>
             </div>
-
-
         </div>
 
-        <hr>
-        <footer class="small text-muted text-center">
-            2024 &copy; <a class="link-secondary" href="https://tetsuakibaba.jp" target="_blank">Tetsuaki BABA</a>
-            <br>
-            <span id="version_date">
 
-            </span>
-        </footer>
+
+
+
+
+    </div>
+
+    <hr>
+    <footer class="small text-muted text-center">
+        2024 &copy; <a class="link-secondary" href="https://tetsuakibaba.jp" target="_blank">Tetsuaki BABA</a>
+        <br>
+        <span id="version_date">
+
+        </span>
+    </footer>
     </div>
 
 
     <script>
         // window のロードが終わったら
         window.onload = function () {
-            let script_version = 'v2.1.1';
+            let script_version = 'v2.2.2';
             let script_paths = [
                 './js/capture.js',
                 './js/checker.js',

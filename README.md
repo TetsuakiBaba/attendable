@@ -5,8 +5,12 @@ NO MORE 出席泥棒. 簡単で確実な出席取りシステム
 > このシステム（attendable）は出席の成績加味を推奨するものではありません．学生の成績は出席ではなく授業参画度を基準として評価すべきです．ご利用される方はその点に十分留意，配慮をしたうえで本システムを利用してください．
 
 ## Version
- - [v2.1](https://github.com/TetsuakiBaba/attendable/tree/main)
-    - 出席コードをconfirmすると該当するユーザの現在までの出席回数と，出席コードを取得した日付も確認できるようにした
+ - [v2.2](https://github.com/TetsuakiBaba/attendable/tree/main)
+   - カメラ機能の強化で遠くからでもQRコードを読み取りやすくした。
+     - zoom機能があるカメラの場合は映像したのスライダーでズームできるようにした
+     - 複数カメラがあるようなスマートフォンの場合、なるべく望遠でカメラをオープンできたほうがよいため、デフォルトオープン設定機能を追加した。「設定」タブを新規ついかして、そこからデフォルトカメラ設定ができる。
+ - [v2.1](https://github.com/TetsuakiBaba/attendable/tree/v2.1)
+   - 出席コードをconfirmすると該当するユーザの現在までの出席回数と，出席コードを取得した日付も確認できるようにした
  - [v2.0](https://github.com/TetsuakiBaba/attendable/tree/v2.0)
    - 出欠時に自動でサーバサイドに出席コードを保存するように変更
  - [v1.0](https://github.com/TetsuakiBaba/attendable/tree/v1.0)
