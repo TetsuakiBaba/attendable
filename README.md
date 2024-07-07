@@ -1,4 +1,4 @@
-# attendable 2.1
+# attendable 2.2
 NO MORE 出席泥棒. 簡単で確実な出席取りシステム
 
 > [!NOTE]
