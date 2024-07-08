@@ -386,7 +386,7 @@
     <script>
         // window のロードが終わったら
         window.onload = function () {
-            let script_version = 'v2.2.2';
+            let script_version = 'v2.2.3';
             let script_paths = [
                 './js/capture.js',
                 './js/checker.js',
@@ -398,6 +398,14 @@
                 document.head.appendChild(script);
             }
             document.querySelector("#title_version").innerHTML = script_version;
+
+            var tabs = document.querySelectorAll('button[data-bs-toggle="tab"]');
+            tabs.forEach(function (tab) {
+                tab.addEventListener('shown.bs.tab', function (event) {
+                    var target = event.target.getAttribute("href"); // アクティブになったタブのhref属性を取得
+                    stopCamera(); //カメラが開いていた場合は停止
+                });
+            });
         }
 
     </script>

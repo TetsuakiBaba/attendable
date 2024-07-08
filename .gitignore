@@ -11,3 +11,4 @@ admin/.htpasswd
 .vs_code/
 .htaccess
 upload.txt
+*.ignore.*

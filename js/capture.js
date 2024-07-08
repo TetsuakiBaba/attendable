@@ -1,5 +1,5 @@
 let version_date_capture_js = `
-last modified: 2024/07/07 22:23:30
+last modified: 2024/07/08 10:41:32
 `;
 
 
@@ -349,67 +349,120 @@ async function startCamera() {
 }
 
 function stopCamera() {
-    var canvasElement = document.getElementById("canvas");
-
-    //console.log(window.cancelAnimationFrame(id_animation_request));
-    camera_stream.getTracks().forEach(function (track) {
-        track.stop();
-
-    });
-    //canvasElement.style.visibility = "hidden";
-
+    if (is_camera_open) {
+        var canvasElement = document.getElementById("canvas");
+        camera_stream.getTracks().forEach(function (track) {
+            track.stop();
+        });
+        document.querySelector('#button_toggle_camera').classList = "btn btn-secondary rounded-pill";
+        setTimeout(function () {
+            canvasElement.style.visibility = "collapse";
+            document.querySelector('#camera_placeholder').innerHTML = '';
+        }, 500);
+    }
     is_camera_open = false;
-    document.querySelector('#button_toggle_camera').classList = "btn btn-secondary rounded-pill";
-    setTimeout(function () {
-        canvasElement.style.visibility = "collapse";
-        document.querySelector('#camera_placeholder').innerHTML = '';
-    }, 500);
 }
+
+// async function tick() {
+//     var canvasElement = document.getElementById("canvas");
+//     if (!canvasElement && is_camera_open == false) {
+//         return;  // ここで処理を中断
+//     }
+//     var canvas = canvasElement.getContext("2d");
+//     if (video.readyState === video.HAVE_ENOUGH_DATA) {
+//         canvasElement.hidden = false;
+
+//         let new_height = video.videoHeight * (canvasElement.clientWidth / video.videoWidth);
+//         canvasElement.width = video.videoWidth * (canvasElement.clientWidth / video.videoWidth);
+//         canvasElement.height = new_height;//video.videoHeight;
+
+//         canvas.drawImage(video, 0, 0, canvasElement.width, new_height);
+//         var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+//         var code = jsQR(imageData.data, imageData.width, imageData.height, {
+//             inversionAttempts: "dontInvert",
+//         });
+
+//         // QRコードが見つかったとき
+//         if (code) {
+//             // code.dataから空白を削除
+//             code.data = code.data.replace(/\s+/g, "");
+//             // code.dataをカンマで2つに分割
+//             let code_data = code.data.split(',');
+//             let timestamp = code_data[0];
+//             let classname = code_data[1];
+
+//             let ret_string = await getEncodedString(timestamp, classname, document.querySelector('#id').value);
+//             // console.log(ret_string);
+//             stopCamera();
+
+//             if (ret_string == null) {
+//                 alert('出席登録が失敗しました。もう一度お試しください。\nAttendance registration failed. Please try again.')
+//             }
+//             else {
+//                 alert('出席登録が成功しました。Confirmボタンを押して正しく出席登録されているのを確認したら、必要に応じてAddボタンで出席コードを追加してください。\nAttendance registration was successful. If you have confirmed that the attendance registration is correct, add the attendance code as necessary by pressing the Add button.');
+//             }
+//             return;
+//         } else {
+//         }
+//     }
+//     id_animation_request = requestAnimationFrame(tick);
+// }
 
 async function tick() {
-    var canvasElement = document.getElementById("canvas");
-    if (!canvasElement) {
-        return;  // ここで処理を中断
-    }
-    var canvas = canvasElement.getContext("2d");
-    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvasElement.hidden = false;
-
-        let new_height = video.videoHeight * (canvasElement.clientWidth / video.videoWidth);
-        canvasElement.width = video.videoWidth * (canvasElement.clientWidth / video.videoWidth);
-        canvasElement.height = new_height;//video.videoHeight;
-
-        canvas.drawImage(video, 0, 0, canvasElement.width, new_height);
-        var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-        var code = jsQR(imageData.data, imageData.width, imageData.height, {
-            inversionAttempts: "dontInvert",
-        });
-
-        // QRコードが見つかったとき
-        if (code) {
-            // code.dataから空白を削除
-            code.data = code.data.replace(/\s+/g, "");
-            // code.dataをカンマで2つに分割
-            let code_data = code.data.split(',');
-            let timestamp = code_data[0];
-            let classname = code_data[1];
-
-            let ret_string = await getEncodedString(timestamp, classname, document.querySelector('#id').value);
-            // console.log(ret_string);
-            stopCamera();
-
-            if (ret_string == null) {
-                alert('出席登録が失敗しました。もう一度お試しください。\nAttendance registration failed. Please try again.')
+    return new Promise(async (resolve, reject) => {
+        try {
+            var canvasElement = document.getElementById("canvas");
+            if (!canvasElement && is_camera_open == false) {
+                resolve();  // ここで処理を中断してPromiseを解決
+                return;
             }
-            else {
-                alert('出席登録が成功しました。Confirmボタンを押して正しく出席登録されているのを確認したら、必要に応じてAddボタンで出席コードを追加してください。\nAttendance registration was successful. If you have confirmed that the attendance registration is correct, add the attendance code as necessary by pressing the Add button.');
+            var canvas = canvasElement.getContext("2d");
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                canvasElement.hidden = false;
+
+                let new_height = video.videoHeight * (canvasElement.clientWidth / video.videoWidth);
+                canvasElement.width = video.videoWidth * (canvasElement.clientWidth / video.videoWidth);
+                canvasElement.height = new_height;
+
+                // キャンバスの幅と高さが0でないことを確認
+                if (canvasElement.width > 0 && canvasElement.height > 0) {
+                    canvas.drawImage(video, 0, 0, canvasElement.width, new_height);
+                    var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert",
+                    });
+
+                    // QRコードが見つかったとき
+                    if (code) {
+                        // code.dataから空白を削除
+                        code.data = code.data.replace(/\s+/g, "");
+                        // code.dataをカンマで2つに分割
+                        let code_data = code.data.split(',');
+                        let timestamp = code_data[0];
+                        let classname = code_data[1];
+
+                        let ret_string = await getEncodedString(timestamp, classname, document.querySelector('#id').value);
+                        stopCamera();
+
+                        if (ret_string == null) {
+                            alert('出席登録が失敗しました。もう一度お試しください。\nAttendance registration failed. Please try again.');
+                            resolve();
+                        } else {
+                            alert('出席登録が成功しました。Confirmボタンを押して正しく出席登録されているのを確認したら、必要に応じてAddボタンで出席コードを追加してください。\nAttendance registration was successful. If you have confirmed that the attendance registration is correct, add the attendance code as necessary by pressing the Add button.');
+                            resolve();
+                        }
+                        return;
+                    }
+                }
             }
-            return;
-        } else {
+            id_animation_request = requestAnimationFrame(() => tick().then(resolve).catch(reject));
+        } catch (error) {
+            reject(error);
         }
-    }
-    id_animation_request = requestAnimationFrame(tick);
+    });
 }
+
 
 
 listCameras();
+// listCameras4Safari();
