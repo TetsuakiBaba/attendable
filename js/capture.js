@@ -1,5 +1,5 @@
 let version_date_capture_js = `
-last modified: 2024/07/08 10:41:32
+last modified: 2024/07/08 10:58:40
 `;
 
 
@@ -199,7 +199,6 @@ async function listCameras() {
         // デバイスを列挙
         const devices = await navigator.mediaDevices.enumerateDevices();
         const videoInputs = devices.filter(device => device.kind === 'videoinput');
-        console.log(videoInputs);
         // セレクトボックスをクリア
         cameraSelect.innerHTML = '';
 
@@ -267,10 +266,9 @@ async function toggleCamera() {
         return;
     }
 
-    is_camera_open = !is_camera_open;
-
     // カメラを開く
-    if (is_camera_open) {
+    if (!is_camera_open) {
+        is_camera_open = true;
         //console.log("startCamera();") <canvas style="width:100%;margin:0;padding:0" id="canvas" hidden></canvas>
         document.querySelector('#camera_placeholder').innerHTML = '<canvas style="width:100%;margin:0;padding:0;border-radius: 0.4rem;border:0px solid #000" class="" id="canvas"></canvas>';
         await startCamera();
@@ -350,6 +348,7 @@ async function startCamera() {
 
 function stopCamera() {
     if (is_camera_open) {
+        is_camera_open = false;
         var canvasElement = document.getElementById("canvas");
         camera_stream.getTracks().forEach(function (track) {
             track.stop();
@@ -360,7 +359,6 @@ function stopCamera() {
             document.querySelector('#camera_placeholder').innerHTML = '';
         }, 500);
     }
-    is_camera_open = false;
 }
 
 // async function tick() {
@@ -412,7 +410,7 @@ async function tick() {
     return new Promise(async (resolve, reject) => {
         try {
             var canvasElement = document.getElementById("canvas");
-            if (!canvasElement && is_camera_open == false) {
+            if (!canvasElement) {
                 resolve();  // ここで処理を中断してPromiseを解決
                 return;
             }
