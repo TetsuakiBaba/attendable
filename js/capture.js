@@ -1,5 +1,5 @@
 let version_date_capture_js = `
-last modified: 2024/07/08 11:21:09
+last modified: 2024/07/08 11:42:23
 `;
 
 
@@ -321,7 +321,6 @@ async function startCamera() {
 
     video = document.createElement("video");
     canvasElement.style.visibility = "visible";
-    console.log(document.querySelector('#camera-select').value);
 
     try {
         // Use facingMode: environment to attempt to get the front camera on phones
@@ -441,7 +440,7 @@ async function tick() {
 
                         let ret_string = await getEncodedString(timestamp, classname, document.querySelector('#id').value);
                         stopCamera();
-
+                        document.getElementById('zoom_ui').innerHTML = '';
                         if (ret_string == null) {
                             alert('出席登録が失敗しました。もう一度お試しください。\nAttendance registration failed. Please try again.');
                             resolve();

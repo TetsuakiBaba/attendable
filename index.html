@@ -386,7 +386,7 @@
     <script>
         // window のロードが終わったら
         window.onload = function () {
-            let script_version = 'v2.2.5';
+            let script_version = 'v2.2.6';
             let script_paths = [
                 './js/capture.js',
                 './js/checker.js',
@@ -404,6 +404,7 @@
                 tab.addEventListener('shown.bs.tab', function (event) {
                     var target = event.target.getAttribute("href"); // アクティブになったタブのhref属性を取得
                     stopCamera(); //カメラが開いていた場合は停止
+                    document.getElementById('zoom_ui').innerHTML = '';
                 });
             });
         }
