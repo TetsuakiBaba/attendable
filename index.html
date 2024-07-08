@@ -150,7 +150,7 @@
                             <input type="text" class="form-control" id="id" placeholder="name@example.com"
                                 autocomplete="off" oninput="checkChar(this);"
                                 onchange="saveIDtoLocalStorage(this.value);">
-                            <label for="id">学生番号</label>
+                            <label for="id">学生（学修、学籍）番号</label>
                         </div>
                     </div>
                     <div class="col-3">
@@ -281,7 +281,7 @@
                 <dl class="row mt-3">
                     <dt class="col-sm-3">1. 出席コードを取得する</dt>
                     <dd class="col-sm-9">
-                        <p>captureタブに移動します。最初に学生番号（学籍番号／学修番号等）を入力してください。入力された学生番号は自動で端末に保存されるので初回以降は入力は不要です。次にカメラボタンを押すとスマートフォンカメラが起動します。起動したカメラで教員が提示するQRコードを撮影します。QRコードが認識できるとカメラが自動で閉じ、取得した出席コード欄に取得されたコードが入力されます。
+                        <p>captureタブに移動します。最初に学生（学修、学籍）番号を入力してください。入力された学生番号は自動で端末に保存されるので初回以降は入力は不要です。次にカメラボタンを押すとスマートフォンカメラが起動します。起動したカメラで教員が提示するQRコードを撮影します。QRコードが認識できるとカメラが自動で閉じ、取得した出席コード欄に取得されたコードが入力されます。
                         </p>
                     </dd>
 
@@ -386,7 +386,7 @@
     <script>
         // window のロードが終わったら
         window.onload = function () {
-            let script_version = 'v2.2.4';
+            let script_version = 'v2.2.5';
             let script_paths = [
                 './js/capture.js',
                 './js/checker.js',

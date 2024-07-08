@@ -1,5 +1,5 @@
 let version_date_capture_js = `
-last modified: 2024/07/08 10:58:40
+last modified: 2024/07/08 11:21:09
 `;
 
 
@@ -139,7 +139,7 @@ function saveIDtoLocalStorage(_id) {
 
 
         if (pasttime > waiting_time) {
-            if (confirm(`学生番号の入力・変更は ${waiting_time / 60000} 分に一度だけしかできません。よろしいですか？`)) {
+            if (confirm(`学生（学修、学籍）番号の入力・変更は ${waiting_time / 60000} 分に一度だけしかできません。よろしいですか？`)) {
                 localStorage.setItem('ID', _id);
                 document.querySelector('#id').value = _id;
                 localStorage.setItem('timestamp', now.getTime());
@@ -262,7 +262,7 @@ var is_camera_open = false;
 async function toggleCamera() {
 
     if (document.querySelector('#id').value == '') {
-        alert('学生番号を入力してからカメラを起動してください\nInput your student number before starting the camera.');
+        alert('学生（学修、学籍）番号を入力してからカメラを起動してください\nInput your student number before starting the camera.');
         return;
     }
 
